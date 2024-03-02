@@ -66,12 +66,30 @@ def get_feed_contents(url):
             entries.append(new_entry)
     return entries
 
-@app.route('/')
-def index():
+def sort_articles_by(sort_by):
     feeds = RSSFeed.query.all()
     feed_contents = {}
+    
+    if not feeds:  # If there are no feeds, return empty lists
+        return [], {}
+
     for feed in feeds:
-        feed_contents[feed.id] = feed.feed_entries
+        if sort_by == 'link':
+            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.link).all()
+        elif sort_by == 'title':
+            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title).all()
+        else:
+            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.desc()).all()
+        
+        feed_contents[feed.id] = sorted_entries
+
+    return feeds, feed_contents
+
+@app.route('/')
+def index():
+    sort_by = request.args.get('sort_by', default='datetime')
+    feeds, feed_contents = sort_articles_by(sort_by)
+
     return render_template('rss.html', feeds=feeds, feed_contents=feed_contents)
 
 @app.route('/add', methods=['POST'])
@@ -82,8 +100,7 @@ def add_feed():
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'lxml')
             website_name = soup.title.string.strip() if soup.title else 'Unknown Website'
-            icon = soup.find('link', rel='icon') or soup.find('link', rel='shortcut icon')
-            icon_url = icon['href'] if icon else ''
+            icon_url = soup.find("icon").text
             new_feed = RSSFeed(url=url, website_name=website_name, icon=icon_url)
             db.session.add(new_feed)
             db.session.commit()
@@ -97,6 +114,12 @@ def add_feed():
 @app.route('/delete/<int:id>')
 def delete_feed(id):
     feed_to_delete = RSSFeed.query.get_or_404(id)
+    
+    # Delete associated feed entries
+    feed_entries_to_delete = FeedEntry.query.filter_by(feed_id=id).all()
+    for entry in feed_entries_to_delete:
+        db.session.delete(entry)
+    
     db.session.delete(feed_to_delete)
     db.session.commit()
     flash('RSS feed deleted successfully!', 'success')

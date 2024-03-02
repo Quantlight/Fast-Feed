@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Reader</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">    <!-- Link to the CSS file -->
-    <script src="{{ url_for('static', filename='rss.js') }}"></script> 
-    <style>
-        /* Custom CSS for horizontal display of subscribed websites */
-        .subscribed-websites ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex; /* Use flexbox */
-            overflow-x: auto; /* Enable horizontal scrolling */
-            white-space: nowrap; /* Prevent line breaks */
-        }
-
-        .subscribed-websites li {
-            margin-right: 10px;
-        }
-
-        .subscribed-websites img {
-            width: 100px; /* Set the width of the website icons */
-            height: auto;
-        }
-    </style>
+    
+    <!-- Material-UI Core styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!-- Material-UI Dark Theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mui/material@5.3.0/dist/material-dark.min.css">
+    
+    <!-- Your custom CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
 </head>
 <body>
-    <h1>RSS Reader</h1>
+<div class="container">
+    <h1 class="text-center mt-5 mb-4">RSS Reader</h1>
     <form action="/refresh" method="get">
         <button type="submit">Refresh Articles</button>
     </form>
@@ -38,10 +34,21 @@
             <option value="full">Full Content</option>
         </select>
     </div>
-    <form action="/add" method="post">
-        <input type="text" name="url" placeholder="Enter RSS Feed URL">
-        <button type="submit">Add</button>
+    <form action="/add" method="post" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="url" class="form-control" placeholder="Enter RSS Feed URL" required>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
     </form>
+    <div>
+        <form action="{{ url_for('index')}}">
+            <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
+            <button type="submit" name="sort_by" value="link">Sort by Link</button>
+            <button type="submit" name="sort_by" value="title">Sort by Title</button>
+        </form>
+    </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -58,55 +65,64 @@
         <ul>
             {% for feed in feeds %}
                 <li>
-                    <h5>{{ feed.website_name }}</h5>
+                    <h4>{{ feed.website_name }}</h4>
                     <p>{{ feed.url }}</p>
-                    <a href="/delete/{{ feed.id }}">Delete</a>
                     {% if feed.icon %}
-                        <img src="{{ feed.icon }}" alt="Website Icon">
+                        <img src="{{ feed.icon }}" alt="Website Icon"><br>
                     {% else %}
-                        <p>Icon</p>
+                        <p>Icon</p><br>
                     {% endif %}
+                    <a href="/delete/{{ feed.id }}">Delete</a>
+
                 </li>
             {% endfor %}
         </ul>
     </div>
     
     <!-- List of articles -->
-    <ul>
+    <ul class="list-group mt-4">
         {% for feed in feeds %}
-            <li>
-                {{ feed.website_name }}
-                <a href="/delete/{{ feed.id }}">Delete</a>
-                <ul>
-                    {% for entry in feed_contents[feed.id] %}
-                        <li class="feed-entry">
-                            <h3>{{ entry.title }}</h3>
-                            <p>Date: {{ entry.date }}</p>
-                            <p>Author: {{ entry.author }}</p>
-                            <div class="short-description">{{ entry.short_description | safe}}</div> <!-- Added a class for short description -->
-                            <div class="full-content" style="display: none;">{{ entry.full_content | safe}}</div> <!-- Added a class for full content -->
-                            {% if entry.img %}
-                                <img src="{{ entry.img }}" alt="Image">
-                            {% endif %}
-                            <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
-                            <p>Feed ID: {{ entry.feed_id }}</p>
-                            <p>Account ID: {{ entry.account_id }}</p>
-                            <p>
-                                <form action="/toggle_unread/{{ entry.id }}" method="post" style="display:inline;">
-                                    <button type="submit" class="{% if entry.is_unread %}btn-active{% else %}btn-inactive{% endif %}">Mark as Unread</button>
-                                </form>
-                                <form action="/toggle_starred/{{ entry.id }}" method="post" style="display:inline;">
-                                    <button type="submit" class="{% if entry.is_starred %}btn-active{% else %}btn-inactive{% endif %}">Star</button>
-                                </form>
-                                <form action="/toggle_read_later/{{ entry.id }}" method="post" style="display:inline;">
-                                    <button type="submit" class="{% if entry.is_read_later %}btn-active{% else %}btn-inactive{% endif %}">Read Later</button>
-                                </form>
-                            </p>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
+            {% for entry in feed_contents[feed.id] %}
+                <li class="list-group-item">
+                    <h3>{{ entry.title }}</h3>
+                    <p>Date: {{ entry.date }}</p>
+                    <p>Author: {{ entry.author }}</p>
+                    <p class="short-description">{{ entry.short_description | safe }}</p>
+                    <p class="full-content" style="display: none;">{{ entry.full_content | safe }}</p>
+                    {% if entry.img %}
+                        <img src="{{ entry.img }}" alt="Image" class="img-fluid">
+                    {% endif %}
+                    <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                    <p>Feed ID: {{ entry.feed_id }}</p>
+                    <p>Account ID: {{ entry.account_id }}</p>
+                    <div class="btn-group" role="group">
+                        <form action="/toggle_unread/{{ entry.id }}" method="post">
+                            <button type="submit" class="btn btn-secondary{% if entry.is_unread %} active{% endif %}">Mark as Unread</button>
+                        </form>
+                        <form action="/toggle_starred/{{ entry.id }}" method="post">
+                            <button type="submit" class="btn btn-secondary{% if entry.is_starred %} active{% endif %}">Star</button>
+                        </form>
+                        <form action="/toggle_read_later/{{ entry.id }}" method="post">
+                            <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} active{% endif %}">Read Later</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
         {% endfor %}
     </ul>
+</div>
+    
+    <!-- Material-UI JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/@mui/material/5.3.0/umd/material.production.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your custom JavaScript file -->
+    <script src="{{ url_for('static', filename='rss.js') }}"></script>
 </body>
 </html>
