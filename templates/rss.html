@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Reader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">    <!-- Link to the CSS file -->
+    <script src="{{ url_for('static', filename='rss.js') }}"></script> 
+    <style>
+        /* Custom CSS for horizontal display of subscribed websites */
+        .subscribed-websites ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex; /* Use flexbox */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent line breaks */
+        }
+
+        .subscribed-websites li {
+            margin-right: 10px;
+        }
+
+        .subscribed-websites img {
+            width: 100px; /* Set the width of the website icons */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>RSS Reader</h1>
+    <form action="/refresh" method="get">
+        <button type="submit">Refresh Articles</button>
+    </form>
+    <div>
+        <label for="toggleMode">Default Display Mode:</label>
+        <select id="toggleMode">
+            <option value="short">Short Description</option>
+            <option value="full">Full Content</option>
+        </select>
+    </div>
+    <form action="/add" method="post">
+        <input type="text" name="url" placeholder="Enter RSS Feed URL">
+        <button type="submit">Add</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Section to list subscribed websites -->
+    <div class="subscribed-websites">
+        <h2>Subscribed Websites</h2>
+        <ul>
+            {% for feed in feeds %}
+                <li>
+                    <h5>{{ feed.website_name }}</h5>
+                    <p>{{ feed.url }}</p>
+                    <a href="/delete/{{ feed.id }}">Delete</a>
+                    {% if feed.icon %}
+                        <img src="{{ feed.icon }}" alt="Website Icon">
+                    {% else %}
+                        <p>Icon</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <!-- List of articles -->
+    <ul>
+        {% for feed in feeds %}
+            <li>
+                {{ feed.website_name }}
+                <a href="/delete/{{ feed.id }}">Delete</a>
+                <ul>
+                    {% for entry in feed_contents[feed.id] %}
+                        <li class="feed-entry">
+                            <h3>{{ entry.title }}</h3>
+                            <p>Date: {{ entry.date }}</p>
+                            <p>Author: {{ entry.author }}</p>
+                            <div class="short-description">{{ entry.short_description | safe}}</div> <!-- Added a class for short description -->
+                            <div class="full-content" style="display: none;">{{ entry.full_content | safe}}</div> <!-- Added a class for full content -->
+                            {% if entry.img %}
+                                <img src="{{ entry.img }}" alt="Image">
+                            {% endif %}
+                            <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                            <p>Feed ID: {{ entry.feed_id }}</p>
+                            <p>Account ID: {{ entry.account_id }}</p>
+                            <p>
+                                <form action="/toggle_unread/{{ entry.id }}" method="post" style="display:inline;">
+                                    <button type="submit" class="{% if entry.is_unread %}btn-active{% else %}btn-inactive{% endif %}">Mark as Unread</button>
+                                </form>
+                                <form action="/toggle_starred/{{ entry.id }}" method="post" style="display:inline;">
+                                    <button type="submit" class="{% if entry.is_starred %}btn-active{% else %}btn-inactive{% endif %}">Star</button>
+                                </form>
+                                <form action="/toggle_read_later/{{ entry.id }}" method="post" style="display:inline;">
+                                    <button type="submit" class="{% if entry.is_read_later %}btn-active{% else %}btn-inactive{% endif %}">Read Later</button>
+                                </form>
+                            </p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
