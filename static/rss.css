@@ -1,0 +1,47 @@
+/* rss.css */
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.success {
+    background-color: #dff0d8;
+    border-color: #d0e9c6;
+    color: #3c763d;
+}
+
+.error {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+.feed-entry {
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.feed-entry img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.btn-active {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-inactive {
+    background-color: #ccc;
+    color: #555;
+}
+
+img[src] {
+    max-width: 300px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
