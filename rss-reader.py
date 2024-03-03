@@ -100,7 +100,8 @@ def add_feed():
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'lxml')
             website_name = soup.title.string.strip() if soup.title else 'Unknown Website'
-            icon_url = soup.find("icon").text
+            icon_tag = soup.find("icon")
+            icon_url = icon_tag.text if icon_tag else "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
             new_feed = RSSFeed(url=url, website_name=website_name, icon=icon_url)
             db.session.add(new_feed)
             db.session.commit()
@@ -110,6 +111,7 @@ def add_feed():
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
     return redirect(url_for('index'))
+
 
 @app.route('/delete/<int:id>')
 def delete_feed(id):

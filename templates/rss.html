@@ -4,20 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Reader</title>
-    
-    <!-- Material-UI Core styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
-    <!-- Material-UI Dark Theme -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mui/material@5.3.0/dist/material-dark.min.css">
-    
-    <!-- Your custom CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
-    
+                
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
 </head>
@@ -27,6 +16,22 @@
     <form action="/refresh" method="get">
         <button type="submit">Refresh Articles</button>
     </form>
+    <button id="add_articles" class="btn btn-primary">Add Articles</button>
+
+    <div id="popup" class="popup">
+        <div id="popup" class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <p>Add a RSS link here</p>
+            <form action="/add" method="post" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="url" class="form-control" placeholder="Enter RSS Feed URL" required>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div>
         <label for="toggleMode">Default Display Mode:</label>
         <select id="toggleMode">
@@ -34,14 +39,6 @@
             <option value="full">Full Content</option>
         </select>
     </div>
-    <form action="/add" method="post" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="url" class="form-control" placeholder="Enter RSS Feed URL" required>
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </form>
     <div>
         <form action="{{ url_for('index')}}">
             <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
@@ -49,16 +46,18 @@
             <button type="submit" name="sort_by" value="title">Sort by Title</button>
         </form>
     </div>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    
+
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     <!-- Section to list subscribed websites -->
     <div class="subscribed-websites">
         <h2>Subscribed Websites</h2>
@@ -72,7 +71,7 @@
                     {% else %}
                         <p>Icon</p><br>
                     {% endif %}
-                    <a href="/delete/{{ feed.id }}">Delete</a>
+                    <a href="/delete/{{ feed.id }}" class="btn btn-danger btn-sm">Delete</a>
 
                 </li>
             {% endfor %}
@@ -87,8 +86,8 @@
                     <h3>{{ entry.title }}</h3>
                     <p>Date: {{ entry.date }}</p>
                     <p>Author: {{ entry.author }}</p>
-                    <p class="short-description">{{ entry.short_description | safe }}</p>
-                    <p class="full-content" style="display: none;">{{ entry.full_content | safe }}</p>
+                    <div class="short-description">{{ entry.short_description | safe}}</div> <!-- Added a class for short description -->
+                    <div class="full-content" >{{ entry.full_content | safe}}</div> <!-- Added a class for full content -->
                     {% if entry.img %}
                         <img src="{{ entry.img }}" alt="Image" class="img-fluid">
                     {% endif %}
@@ -97,13 +96,13 @@
                     <p>Account ID: {{ entry.account_id }}</p>
                     <div class="btn-group" role="group">
                         <form action="/toggle_unread/{{ entry.id }}" method="post">
-                            <button type="submit" class="btn btn-secondary{% if entry.is_unread %} active{% endif %}">Mark as Unread</button>
+                            <button type="submit" class="btn btn-secondary{% if entry.is_unread %} btn-success{% endif %}">Mark as Unread</button>
                         </form>
                         <form action="/toggle_starred/{{ entry.id }}" method="post">
-                            <button type="submit" class="btn btn-secondary{% if entry.is_starred %} active{% endif %}">Star</button>
+                            <button type="submit" class="btn btn-secondary{% if entry.is_starred %} btn-success{% endif %}">Star</button>
                         </form>
                         <form action="/toggle_read_later/{{ entry.id }}" method="post">
-                            <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} active{% endif %}">Read Later</button>
+                            <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} btn-success{% endif %}">Read Later</button>
                         </form>
                     </div>
                 </li>
@@ -115,14 +114,12 @@
     <!-- Material-UI JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/@mui/material/5.3.0/umd/material.production.min.js"></script>
     
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Your custom JavaScript file -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='rss.js') }}"></script>
+
 </body>
 </html>
