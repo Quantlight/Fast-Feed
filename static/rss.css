@@ -42,8 +42,9 @@
 }
 
 img[src] {
-  max-width: 300px; /* Adjust the width as needed */
+  max-width: 400px; /* Adjust the width as needed */
   height: auto; /* Maintain aspect ratio */
+  border-radius: 5px;
 }
 
 /* Custom CSS for horizontal display of subscribed websites */
@@ -105,4 +106,10 @@ img[src] {
 }
 .full-content{
   display: none;
+}
+
+#subscribed-article-icon {
+  border-radius: 50px;
+  max-width: 50px;
+  margin: 5px;
 }
