@@ -4,7 +4,8 @@ from models import RSSFeed, FeedEntry, db
 from helpers import is_valid_rss, get_feed_contents, sort_articles_by
 import requests
 from bs4 import BeautifulSoup
-
+from youtube_transcript_api import YouTubeTranscriptApi
+from summarizer import ai_summarizer
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
@@ -87,3 +88,41 @@ def toggle_read_later(id):
     db.session.commit()
     flash('Article marked to read later!' if entry.is_read_later else 'Article removed from read later!', 'success')
     return redirect(url_for('index'))
+
+# Youtube summarize
+@app.route('/youtube', methods=['GET', 'POST'])
+def youtube():
+    if request.method == 'POST':
+        video_link = request.form.get('video_link')
+        video_id = video_link.split('=')[-1]  # Extract video ID from link
+        try:
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript = ''
+            for item in transcript_list:
+                transcript += f"{item['text']} "
+
+            summarized_transcript = ai_summarizer(transcript)
+            return render_template('youtube.html', transcript=transcript, summary=summarized_transcript)
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            error_message = "Error processing the video. Please enter a valid YouTube video link."
+            return render_template('youtube.html', error_message=error_message)
+
+    return render_template('youtube.html')
+
+@app.route('/youtube/<videolinkid>')
+def get_youtube_summary(videolinkid):
+    try:
+        transcript_list = YouTubeTranscriptApi.get_transcript(videolinkid)
+        transcript = ''
+        for item in transcript_list:
+            transcript += f"{item['text']} "
+
+        summarized_transcript = ai_summarizer(transcript)
+        return render_template('youtube.html', transcript=transcript, summary=summarized_transcript)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        error_message = "Error processing the video. Please enter a valid YouTube video link."
+        return render_template('youtube.html', error_message=error_message)
