@@ -1,7 +1,7 @@
 # routes.py
 from flask import Flask,render_template, request, redirect, url_for, flash
 from models import RSSFeed, FeedEntry, db
-from helpers import is_valid_rss, get_feed_contents, sort_articles_by
+from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -94,7 +94,7 @@ def toggle_read_later(id):
 def youtube():
     if request.method == 'POST':
         video_link = request.form.get('video_link')
-        video_id = video_link.split('=')[-1]  # Extract video ID from link
+        video_id = extract_video_id(video_link)
         try:
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
             transcript = ''

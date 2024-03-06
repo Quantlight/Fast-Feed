@@ -79,3 +79,11 @@ def article_content(url):
     
 def remove_blank_lines(_full_content):
     return re.sub(r'^\s*\n', '', _full_content, flags=re.MULTILINE)
+
+def extract_video_id(video_link):
+    pattern = r'(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})(?:\S+)?'
+    match = re.search(pattern, video_link)
+    if match:
+        return match.group(1)
+    else:
+        return None
