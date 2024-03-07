@@ -15,6 +15,7 @@ class RSSFeed(db.Model):
         return f'<RSSFeed {self.url}>'
 
 class FeedEntry(db.Model):
+    # Article Details
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(200), nullable=False)
@@ -25,8 +26,12 @@ class FeedEntry(db.Model):
     summarized_content = db.Column(db.Text)
     img = db.Column(db.String(200))
     link = db.Column(db.String(200), nullable=False)
+
+    #IDs
     feed_id = db.Column(db.Integer, db.ForeignKey('rss_feed.id'), nullable=False)
     account_id = db.Column(db.Integer)
+    
+    # flasgs
     is_unread = db.Column(db.Boolean, default=True)
     is_starred = db.Column(db.Boolean, default=False)
     is_read_later = db.Column(db.Boolean, default=False)

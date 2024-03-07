@@ -21,10 +21,6 @@ def get_feed_contents(url):
     
     for entry in feed.entries:
         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
-        full_content = article_content(entry.link)
-        full_content = remove_blank_lines(full_content)
-        _summarized_content = ai_summarizer(full_content)
-        print(_summarized_content)
         if not existing_entry:
             new_entry = FeedEntry(
                 title=entry.title,
@@ -32,12 +28,27 @@ def get_feed_contents(url):
                 raw_description=entry.description,
                 short_description=entry.summary,
                 full_content=entry.content[0].value if hasattr(entry, 'content') else '',
-                summarized_content=_summarized_content,
                 img=entry.enclosures[0].href if hasattr(entry, 'enclosures') and entry.enclosures else '',
                 link=entry.link,
                 feed_id=RSSFeed.query.filter_by(url=url).first().id
             )
             entries.append(new_entry)
+    return entries
+
+def summarize_content(url):
+    feed = feedparser.parse(url)
+    entries = []
+    
+    for entry in feed.entries:
+        existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
+        if existing_entry and not existing_entry.summarized_content:
+            full_content = article_content(entry.link)
+            full_content = remove_blank_lines(full_content)
+            summarized_content = ai_summarizer(full_content)
+            print(summarized_content)
+            existing_entry.summarized_content = summarized_content
+            entries.append(existing_entry)  # Append existing entry for tracking updated entries
+    
     return entries
 
 def sort_articles_by(sort_by):

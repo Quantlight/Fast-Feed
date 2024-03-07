@@ -1,7 +1,7 @@
 # routes.py
 from flask import Flask,render_template, request, redirect, url_for, flash
 from models import RSSFeed, FeedEntry, db
-from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia
+from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -62,6 +62,16 @@ def refresh_feed():
         db.session.add_all(entries)
     db.session.commit()
     flash('Articles refreshed successfully!', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/summarize')
+def summarize():
+    feeds = RSSFeed.query.all()
+    for feed in feeds:
+        entries = summarize_content(feed.url)
+        db.session.add_all(entries)
+    db.session.commit()
+    flash('Articles Summarized successfully!', 'success')
     return redirect(url_for('index'))
 
 # Toggle Buttons
