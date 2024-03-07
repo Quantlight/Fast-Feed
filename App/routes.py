@@ -1,7 +1,7 @@
 # routes.py
 from flask import Flask,render_template, request, redirect, url_for, flash
 from models import RSSFeed, FeedEntry, db
-from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id
+from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -126,3 +126,17 @@ def get_youtube_summary(videolinkid):
         print(f"An error occurred: {e}")
         error_message = "Error processing the video. Please enter a valid YouTube video link."
         return render_template('youtube.html', error_message=error_message)
+
+@app.route('/wikipedia', methods=['GET', 'POST'])
+def wikipedia_content():
+    if request.method == 'POST':
+        wiki_link = request.form['wiki_link']
+        try:
+            content = extract_text_from_wikipedia(wiki_link)
+
+            summary = ai_summarizer(content)
+            return render_template('wikipedia.html', content=content, summary=summary)
+
+        except:
+            print("Error Collecting info about wikipedia articles")
+    return render_template('wikipedia.html')

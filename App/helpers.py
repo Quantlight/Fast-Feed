@@ -5,6 +5,8 @@ import article_parser
 import requests
 import re
 from summarizer import ai_summarizer
+import wikipedia
+from bs4 import BeautifulSoup
 
 def is_valid_rss(url):
     try:
@@ -87,3 +89,36 @@ def extract_video_id(video_link):
         return match.group(1)
     else:
         return None
+
+def remove_citations(text):
+    # Remove citation patterns like [34], [35], [21][36][37], etc.
+    cleaned_text = re.sub(r'\[\d+\](\[\d+\])*', '', text)
+    # remove \n characters
+    cleaned_text = cleaned_text.replace('\n', ' ')
+    return cleaned_text
+
+def extract_text_from_wikipedia(wiki_link):
+    try:
+        r = requests.get(wiki_link)
+        soup = BeautifulSoup(r.text,'html.parser').select('body')[0]
+        paragraphs = []
+        
+        for tag in soup.find_all():
+            # For Paragraph use p tag
+            if tag.name=="p":
+                text = remove_citations(tag.text)
+                # use text for fetch the content inside p tag
+                paragraphs.append(text)
+        
+        output = ""
+        for i in range(len(paragraphs)):
+            output += paragraphs[i]
+            if i < len(paragraphs) - 1:
+                output += ''
+        #print(output, '\n\n')   
+        return output
+        
+    except wikipedia.exceptions.PageError as e:
+        print(f"Error: {e}")
+    except wikipedia.exceptions.DisambiguationError as e:
+        print(f"Error: {e}")
