@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wikipedia Content</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='manual.css') }}">
+
+    <style>
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter a Wikipedia Link</h1>
+    <form action="{{ url_for('wikipedia_content') }}" method="post">
+        <input type="text" name="wiki_link" placeholder="Wikipedia Link" required>
+        <button type="submit">Extract Content</button>
+    </form>
+
+    {% if content and summary %}
+    <h2>Original Content</h2>
+    <pre>{{ content }}</pre>
+
+    <h2>Summarized Content</h2>
+    <pre>{{ summary }}</pre>
+    {% endif %}
+</body>
+</html>
