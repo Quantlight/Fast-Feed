@@ -31,7 +31,7 @@ class FeedEntry(db.Model):
     feed_id = db.Column(db.Integer, db.ForeignKey('rss_feed.id'), nullable=False)
     account_id = db.Column(db.Integer)
     
-    # flasgs
+    # flags
     is_unread = db.Column(db.Boolean, default=True)
     is_starred = db.Column(db.Boolean, default=False)
     is_read_later = db.Column(db.Boolean, default=False)
