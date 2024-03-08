@@ -18,6 +18,10 @@ def index():
 
     return render_template('rss.html', feeds=feeds, feed_contents=feed_contents)
 
+@app.route('/<page_name>')
+def load_page(page_name):
+    return render_template(page_name)
+
 @app.route('/add', methods=['POST'])
 def add_feed():
     url = request.form['url']
