@@ -14,7 +14,7 @@
     <h1>Enter a Wikipedia Link</h1>
     <form action="{{ url_for('wikipedia_content') }}" method="post">
         <input type="text" name="wiki_link" placeholder="Wikipedia Link" required>
-        <button type="submit">Extract Content</button>
+        <button type="submit">Summarize Content</button>
     </form>
 
     {% if content and summary %}
