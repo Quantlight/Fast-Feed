@@ -90,9 +90,19 @@
                     <h3>{{ entry.title }}</h3>
                     <p>Date: {{ entry.date }}</p>
                     <p>Author: {{ entry.author }}</p>
-                    <div class="short-description">{{ entry.short_description | safe}}</div> <!-- Added a class for short description -->
+                    <h2>Content:</h2>
+                    <!-- Added a class for Contents -->
+                    <div class="short-description">{{ entry.short_description | safe}}</div>
                     <div class="full-content" >{{ entry.full_content | safe}}</div>
-                    <div class="summarized-content">{{ entry.summarized_content | safe}}</div> <!-- Added a class for full content -->
+                    <h2>Summary:</h2>
+                    <!-- Added a class for Summarized content -->
+                    <div class="summarized-content">
+                        {% if entry.summarized_content %}
+                            {{ entry.summarized_content | safe }}
+                        {% else %}
+                            <p>No summarized content available. You can Click on Summarized Article button to Generate a summary. </p>
+                        {% endif %}
+                    </div>
                     {% if entry.img %}
                         <img src="{{ entry.img }}" alt="Image" class="img-fluid">
                     {% endif %}
