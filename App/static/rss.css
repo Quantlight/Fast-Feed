@@ -98,6 +98,7 @@ img[src] {
 }
 
 #sidebar {
+  opacity: 0;
   width: 50vh;
   position: fixed;
   top: 0;
@@ -106,13 +107,17 @@ img[src] {
   z-index: 999;
   background: #ffffff;
   color: #000000;
-  transition: all 0.3s;
+  transition: all 0.5s cubic-bezier(0.42, 0, 0.58, 1);
   overflow-y: scroll;
   resize: horizontal;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 #sidebar.active {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  opacity: 1;
+  transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   left: 0;
 }
 
