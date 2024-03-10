@@ -47,23 +47,6 @@ img[src] {
   border-radius: 5px;
 }
 
-/* Custom CSS for horizontal display of subscribed websites */
-.subscribed-websites ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex; /* Use flexbox */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  white-space: nowrap; /* Prevent line breaks */
-}
-
-.subscribed-websites li {
-  margin-right: 10px;
-}
-
-.subscribed-websites img {
-  width: 100px; /* Set the width of the website icons */
-  height: auto;
-}
 
 .popup {
   display: none; /* Hide the popup by default */
@@ -112,4 +95,86 @@ img[src] {
   border-radius: 50px;
   max-width: 50px;
   margin: 5px;
+}
+
+#sidebar {
+  width: 50vh;
+  position: fixed;
+  top: 0;
+  left: -50vh;
+  height: 100vh;
+  z-index: 999;
+  background: #ffffff;
+  color: #000000;
+  transition: all 0.3s;
+  overflow-y: scroll;
+  resize: horizontal;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#sidebar.active {
+  left: 0;
+}
+
+#content {
+  width: 100%;
+  padding: 20px;
+  transition: all 0.3s;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.sidebar-header {
+  padding: 20px;
+  background: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subscribed-websites {
+  padding: 20px;
+}
+
+.subscribed-websites h2 {
+  margin-bottom: 20px;
+}
+
+.subscribed-websites ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.subscribed-websites li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #6c757d;
+}
+
+.subscribed-websites li:last-child {
+  border-bottom: none;
+}
+
+#subscribed-article-icon {
+  max-width: 50px;
+  margin-bottom: 10px;
+}
+
+/* Custom CSS for horizontal display of subscribed websites */
+.subscribed-websites-main ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex; /* Use flexbox */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.subscribed-websites-main li {
+  margin-right: 10px;
+}
+
+.subscribed-websites-main img {
+  width: 100px; /* Set the width of the website icons */
+  height: auto;
 }

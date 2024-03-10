@@ -54,3 +54,31 @@ function closePopup() {
   popup.style.display = "none";
 }
 
+$(document).ready(function() {
+    var isResizing = false;
+    var lastDownX = 0;
+
+    $('#sidebarToggle').on('click', function() {
+        $('#sidebar').toggleClass('active');
+    });
+
+    $('#sidebarClose').on('click', function() {
+        $('#sidebar').removeClass('active');
+    });
+
+    $('#resizeHandle').on('mousedown', function(e) {
+        isResizing = true;
+        lastDownX = e.clientX;
+    });
+
+    $(document).on('mousemove', function(e) {
+        if (!isResizing) return;
+
+        var offsetRight = $(window).width() - (e.clientX + $('#sidebar').width());
+        $('#sidebar').css('width', $(window).width() - offsetRight);
+    });
+
+    $(document).on('mouseup', function(e) {
+        isResizing = false;
+    });
+});

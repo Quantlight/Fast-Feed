@@ -62,8 +62,10 @@
             {% endif %}
         {% endwith %}
     </div>
+
+    <button id="sidebarToggle" class="btn btn-primary">Toggle Sidebar</button>
     <!-- Section to list subscribed websites -->
-    <div class="subscribed-websites">
+    <div class="subscribed-websites-main">
         <h2>Subscribed Websites</h2>
         <ul>
             {% for feed in feeds %}
@@ -81,7 +83,31 @@
             {% endfor %}
         </ul>
     </div>
-    
+
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h3>Subscribed Websites</h3>
+        </div>
+        <div class="subscribed-websites">
+            <!-- Section to list subscribed websites -->
+            <button id="sidebarClose" class="btn btn-danger">Close</button>
+            <ul>
+                {% for feed in feeds %}
+                <li>
+                    <h4>{{ feed.website_name }}</h4>
+                    <p>{{ feed.url }}</p>
+                    {% if feed.icon %}
+                    <img id="subscribed-article-icon" src="{{ feed.icon }}" alt="Website Icon"><br>
+                    {% else %}
+                    <p>Icon</p><br>
+                    {% endif %}
+                    <a href="/delete/{{ feed.id }}" class="btn btn-danger btn-sm">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
     <!-- List of articles -->
     <ul class="list-group mt-4">
         {% for feed in feeds %}
