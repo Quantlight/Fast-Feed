@@ -82,11 +82,16 @@ img[src] {
   text-decoration: none;
   cursor: pointer;
 }
-
-.list-group-item {
+/*Content of Subscribed Websites*/
+#articles-list {
   color: #000000;
   background-color: #ffffff;
 }
+
+button{
+  margin: 5px;
+}
+
 .full-content{
   display: none;
 }
