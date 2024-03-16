@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='horizontal-list.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='linear-rainbow.css') }}">
 
 </head>
 <body>
@@ -39,9 +38,9 @@
             </ul>
         </div>
     </nav>
-    
+
 <div class="container">
-    <h1 class="text-center mt-5 mb-4">RSS Reader</h1>
+    <h1> RSS Reader<div class="animated-border"></div></h1>
     <form action="/refresh" method="get">
         <button type="submit">Refresh Articles</button>
     </form>

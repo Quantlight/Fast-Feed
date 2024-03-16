@@ -1,0 +1,47 @@
+.animated-border {
+    position: relative;
+    padding-bottom: 20px; /* Adjust as needed */
+    width: 200px; /* Adjust as needed */
+    border-bottom: 3px solid transparent;
+    animation: rainbowBorder 3s linear infinite;
+    margin: 0 auto; /* Center horizontally */
+}
+
+@keyframes rainbowBorder {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animated-border::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-image: linear-gradient(to right, 
+        violet,
+        indigo,
+        blue,
+        green,
+        yellow,
+        orange,
+        red,
+        violet
+    );
+    background-size: 200% 100%;
+    animation: rainbowColors 3s linear infinite;
+}
+
+@keyframes rainbowColors {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
