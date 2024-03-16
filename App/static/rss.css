@@ -1,5 +1,11 @@
-/* rss.css */
+body{
+  
+}
 
+h1 {
+  margin-top: 70px;
+  text-align: center;
+}
 .message {
   padding: 10px;
   margin-bottom: 10px;

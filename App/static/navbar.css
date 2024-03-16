@@ -5,7 +5,7 @@
     width: 100%;
     z-index: 1000;
     background-color: rgba(255, 255, 255, 0.445); /* Semi-transparent background */
-    backdrop-filter: blur(10px); /* Apply blur effect */
+    backdrop-filter: saturate(200%) blur(5px); /* Apply blur effect */
     transition: background-color 0.3s ease; /* Smooth transition for background color change */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
     border-radius: 0; /* Optional: Remove border radius */
@@ -13,10 +13,6 @@
     justify-content: space-between; /* Align items with space between them */
     align-items: center; /* Center items vertically */
     padding: 10px 20px; /* Adjust padding for the navbar */
-}
-
-#sidebarToggle{
-    margin-left: 5px;
 }
 
 .navbar-brand {
