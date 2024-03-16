@@ -20,6 +20,9 @@
 <body>
     <nav class="navbar">
         <div class="container">
+            <button id="sidebarToggle" id="sidebar-toggler" class="btn btn-success">
+                &#9776; <!-- This is the Unicode character for the hamburger icon -->
+            </button>
             <a class="navbar-brand" href="#">RSS Feed Manager</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
@@ -88,7 +91,6 @@
         {% endwith %}
     </div>
 
-    <button id="sidebarToggle" class="btn btn-primary">Toggle Sidebar</button>
     <!-- Section to list subscribed websites -->
     <div class="subscribed-websites-main">
         <h2>Subscribed Websites</h2>

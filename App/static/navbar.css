@@ -15,9 +15,15 @@
     padding: 10px 20px; /* Adjust padding for the navbar */
 }
 
+#sidebarToggle{
+    margin-left: 5px;
+}
+
 .navbar-brand {
     font-weight: bold;
     color: #333; /* Brand/logo text color */
+    margin-left: 10px;
+    margin-right: auto;
 }
 
 .navbar-toggler {
@@ -53,4 +59,5 @@
 .nav-link:hover {
     color: #28a745; /* Change text color on hover */
     text-decoration: none; /* Remove underline on hover */
+    transition: color 0.5s ease-in-out;
 }
