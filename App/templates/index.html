@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+    <button onclick="loadPage('rss.html')">RSS</button>
+    <button onclick="loadPage('wikipedia.html')">Wikipedia</button>
+    <button onclick="loadPage('youtube.html')">Youtube</button>
+
+    <div id="main-content"></div>
+
+    <script>
+        function loadPage(pageName) {
+            fetch(`/${pageName}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading page:', error));
+        }
+
+        // Load the default page when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPage('rss.html');
+        });
+    </script>
+    
+</body>
+</html>
