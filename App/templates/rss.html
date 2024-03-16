@@ -12,33 +12,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='popup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='horizontal-list.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
 
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
+    <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">RSS Feed Manager</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="add_articles">Add Feed</a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="/refresh" method="get">
-                            <button type="submit" class="btn btn-success">Refresh Articles</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+            <a class="navbar-brand" href="#">RSS Feed Manager</a>
+            <ul class="navbar-nav" id="navbarNav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="add_articles">Add Feed</a>
+                </li>
+                <li class="nav-item">
+                    <form action="/refresh" method="get">
+                        <button type="submit" class="btn btn-success">Refresh Articles</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </nav>
+    
 <div class="container">
     <h1 class="text-center mt-5 mb-4">RSS Reader</h1>
     <form action="/refresh" method="get">

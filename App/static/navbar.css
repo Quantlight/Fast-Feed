@@ -1,0 +1,56 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.445); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
+    border-radius: 0; /* Optional: Remove border radius */
+    display: flex; /* Display navbar items horizontally */
+    justify-content: space-between; /* Align items with space between them */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Adjust padding for the navbar */
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #333; /* Brand/logo text color */
+}
+
+.navbar-toggler {
+    color: #333; /* Hamburger icon color */
+    border: none; /* Remove default button border */
+    background: none; /* Remove default button background */
+}
+
+.navbar-nav {
+    flex-direction: row;
+    display: flex; /* Display nav items horizontally */
+    align-items: center; /* Center items vertically */
+    list-style: none; /* Remove default list style */
+}
+
+.nav-item {
+    margin-left: 15px; /* Adjust spacing between nav items */
+}
+
+.nav-link {
+    color: #333; /* Nav link text color */
+    text-decoration: none; /* Remove underline from links */
+    padding: 10px; /* Add padding to links */
+}
+
+.btn-success {
+    background-color: #28a745; /* Success button background color */
+    border-color: #28a745; /* Success button border color */
+    padding: 8px 16px; /* Adjust padding for the success button */
+}
+
+/* Hover effect for nav links */
+.nav-link:hover {
+    color: #28a745; /* Change text color on hover */
+    text-decoration: none; /* Remove underline on hover */
+}
