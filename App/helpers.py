@@ -24,7 +24,7 @@ def get_feed_contents(url):
         if not existing_entry:
             new_entry = FeedEntry(
                 title=entry.title,
-                author=entry.author,
+                author = entry.author if hasattr(entry, 'author') else 'None',
                 raw_description=entry.description,
                 short_description=entry.summary,
                 full_content=entry.content[0].value if hasattr(entry, 'content') else '',
