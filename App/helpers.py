@@ -133,3 +133,33 @@ def extract_text_from_wikipedia(wiki_link):
         print(f"Error: {e}")
     except wikipedia.exceptions.DisambiguationError as e:
         print(f"Error: {e}")
+
+# Get icon of the website
+def get_favicon(url):
+    # Get the domain from the URL
+    domain = get_domain(url)
+    if domain:
+        favicon_url = f"https://{domain}/favicon.ico"
+        try:
+            # Attempt to fetch the favicon
+            response = requests.get(favicon_url)
+            if response.status_code == 200:
+                return favicon_url
+            else:
+                return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+        except requests.RequestException:
+            # Return default favicon URL if there's an error fetching the favicon
+            return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+    else:
+        # Return default favicon URL if domain extraction fails
+        return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+
+# Get the domain only which will exclude all the additional parameters
+def get_domain(url):
+    # Regular expression pattern to extract domain from URL
+    pattern = r"https?://(?:www\.)?([a-zA-Z0-9.-]+).*"
+    match = re.match(pattern, url)
+    if match:
+        return match.group(1)
+    else:
+        return None

@@ -1,7 +1,7 @@
 # routes.py
 from flask import Flask,render_template, request, redirect, url_for, flash
 from models import RSSFeed, FeedEntry, db
-from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content
+from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content, get_domain, get_favicon
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -31,7 +31,7 @@ def add_feed():
             soup = BeautifulSoup(response.text, 'lxml')
             website_name = soup.title.string.strip() if soup.title else 'Unknown Website'
             icon_tag = soup.find("icon")
-            icon_url = icon_tag.text if icon_tag else "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+            icon_url = icon_tag.text if icon_tag else get_favicon(url)
             new_feed = RSSFeed(url=url, website_name=website_name, icon=icon_url)
             db.session.add(new_feed)
             db.session.commit()
