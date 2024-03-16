@@ -1,0 +1,17 @@
+/* Custom CSS for horizontal display of subscribed websites */
+.subscribed-websites-main ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex; /* Use flexbox */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent line breaks */
+  }
+  
+.subscribed-websites-main li {
+    margin-right: 10px;
+  }
+  
+.subscribed-websites-main img {
+    width: 100px; /* Set the width of the website icons */
+    height: auto;
+  }
