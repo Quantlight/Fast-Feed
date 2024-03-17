@@ -58,6 +58,5 @@ button{
   margin: 5px;
 }
 
-#sort-by {
-  z-index: 10;
+.container {
 }

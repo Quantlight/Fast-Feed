@@ -18,6 +18,7 @@
   align-items: center; /* Center items horizontally */
   text-align: center; /* Center text horizontally */
   width: 200px; /* Set a fixed width for each item */
+  min-height: 200px;
 }
 
 .subscribed-websites-main .feed-item h4 {
