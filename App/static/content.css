@@ -1,0 +1,16 @@
+  /*Content of Subscribed Websites*/
+#articles-list {
+    color: #000000;
+    background-color: #ffffff;
+    z-index: 10;
+  }
+  
+.full-content{
+    display: none;
+  }
+  
+#subscribed-article-icon {
+    border-radius: 50px;
+    max-width: 50px;
+    margin: 5px;
+  }

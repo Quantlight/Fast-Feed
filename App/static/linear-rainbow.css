@@ -5,6 +5,7 @@
     border-bottom: 3px solid transparent;
     animation: rainbowBorder 3s linear infinite;
     margin: 0 auto; /* Center horizontally */
+    
 }
 
 @keyframes rainbowBorder {

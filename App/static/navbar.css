@@ -3,9 +3,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    height: 70px;
+    z-index: 100;
     background-color: rgba(255, 255, 255, 0.445); /* Semi-transparent background */
-    backdrop-filter: saturate(200%) blur(5px); /* Apply blur effect */
+    backdrop-filter: blur(7px); /* Apply blur effect */
     transition: background-color 0.3s ease; /* Smooth transition for background color change */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
     border-radius: 0; /* Optional: Remove border radius */
@@ -54,6 +55,6 @@
 /* Hover effect for nav links */
 .nav-link:hover {
     color: #28a745; /* Change text color on hover */
-    text-decoration: none; /* Remove underline on hover */
-    transition: color 0.5s ease-in-out;
+    text-decoration: underline; 
+    transition: all 0.5s ease-in-out;
 }

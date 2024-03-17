@@ -1,10 +1,11 @@
 body{
-  
+
 }
 
 h1 {
   margin-top: 70px;
   text-align: center;
+  z-index: 10;
 }
 .message {
   padding: 10px;
@@ -53,22 +54,10 @@ img[src] {
   border-radius: 5px;
 }
 
-/*Content of Subscribed Websites*/
-#articles-list {
-  color: #000000;
-  background-color: #ffffff;
-}
-
 button{
   margin: 5px;
 }
 
-.full-content{
-  display: none;
-}
-
-#subscribed-article-icon {
-  border-radius: 50px;
-  max-width: 50px;
-  margin: 5px;
+#sort-by {
+  z-index: 10;
 }

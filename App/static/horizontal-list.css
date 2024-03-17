@@ -1,17 +1,39 @@
 /* Custom CSS for horizontal display of subscribed websites */
 .subscribed-websites-main ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex; /* Use flexbox */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Prevent line breaks */
-  }
-  
+  list-style-type: none;
+  padding: 0;
+  display: flex; /* Use flexbox */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent line breaks */
+  z-index: 10;
+}
+
 .subscribed-websites-main li {
-    margin-right: 10px;
-  }
-  
-.subscribed-websites-main img {
-    width: 100px; /* Set the width of the website icons */
-    height: auto;
-  }
+  margin-right: 20px; /* Adjust spacing between items */
+}
+
+.subscribed-websites-main .feed-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  text-align: center; /* Center text horizontally */
+  width: 200px; /* Set a fixed width for each item */
+}
+
+.subscribed-websites-main .feed-item h4 {
+  font-size: 0.9em; /* Set smaller font size */
+  max-width: 180px; /* Set the maximum width for the website name */
+  overflow: hidden; /* Hide text that exceeds the maximum width */
+  text-overflow: ellipsis; /* Display ellipsis (...) for overflowed text */
+  white-space: normal; /* Allow text to wrap within the container */
+}
+
+.subscribed-websites-main img#subscribed-article-icon {
+  width: 100px; /* Set the width of the website icons */
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.subscribed-websites-main .btn-danger {
+  margin-top: 10px; /* Add space between icon and button */
+}
