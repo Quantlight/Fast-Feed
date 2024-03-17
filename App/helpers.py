@@ -7,6 +7,7 @@ import re
 from summarizer import ai_summarizer
 import wikipedia
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 def is_valid_rss(url):
     try:
@@ -23,7 +24,8 @@ def get_feed_contents(url):
         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
         if not existing_entry:
             new_entry = FeedEntry(
-                title=entry.title,
+                title = entry.title,
+                date = format_datetime(entry.published) if hasattr(entry, 'published') else None,
                 author = entry.author if hasattr(entry, 'author') else 'None',
                 raw_description=entry.description,
                 short_description=entry.summary,
@@ -163,3 +165,8 @@ def get_domain(url):
         return match.group(1)
     else:
         return None
+
+def format_datetime(dateTimeString):
+    date = datetime.fromisoformat(dateTimeString)  # Parse the ISO 8601 date string
+    formatted_date = date.strftime("%A, %B %d, %Y %I:%M %p")
+    return formatted_date

@@ -17,7 +17,7 @@ class RSSFeed(db.Model):
 class FeedEntry(db.Model):
     # Article Details
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.String, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(200), nullable=False)
     author = db.Column(db.String(100))
     raw_description = db.Column(db.Text)
