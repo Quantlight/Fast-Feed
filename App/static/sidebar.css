@@ -4,11 +4,11 @@
     position: fixed;
     top: 70px; /* Adjust the top position to display below the navbar */
     left: -100% ;
-    height: 100%; /* Subtract navbar height from the viewport height */
+    height: calc(100% - 70px); /* Subtract navbar height from the viewport height */
     z-index: 50;
     background: rgba(255, 255, 255, 0.445);
     color: #000000;
-    transition: all 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+    transition: left 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     overflow-y: scroll;
     resize: horizontal;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
