@@ -1,10 +1,10 @@
-    document.addEventListener('DOMContentLoaded', function () {
-        const copyButtons = document.querySelectorAll('.copy-btn');
+document.addEventListener('DOMContentLoaded', function () {
+    const copyButtons = document.querySelectorAll('.copy-btn');
         
         copyButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const listItem = button.closest('.list-group-item');
-                const fullContent = listItem.querySelector('.full-content');
+                const fullContent = listItem.querySelector('.short-description');
                 
                 // Create a textarea element to hold the text
                 const textarea = document.createElement('textarea');
