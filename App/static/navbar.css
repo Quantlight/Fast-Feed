@@ -17,7 +17,7 @@
 }
 
 .navbar-brand {
-    font-weight: bold;
+    font-weight: 500;
     color: #333; /* Brand/logo text color */
     margin-left: 10px;
     margin-right: auto;
