@@ -83,6 +83,10 @@
             <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
             <button type="submit" name="sort_by" value="link">Sort by Link</button>
             <button type="submit" name="sort_by" value="title">Sort by Title</button>
+            <select name="sort_order">
+                <option value="asc" {% if request.args.get('sort_order', 'desc') == 'asc' %} selected {% endif %}>Ascending</option>
+                <option value="desc" {% if request.args.get('sort_order', 'desc') == 'desc' %} selected {% endif %}>Descending</option>
+            </select>
         </form>
     </div>
 
