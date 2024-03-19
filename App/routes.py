@@ -14,7 +14,8 @@ app.config['SECRET_KEY'] = 'your_secret_key_here'  # Needed for flash messages
 @app.route('/')
 def index():
     sort_by = request.args.get('sort_by', default='datetime')
-    feeds, feed_contents = sort_articles_by(sort_by)
+    sort_order = request.args.get('sort_order', default='desc')  # Default to descending order
+    feeds, feed_contents = sort_articles_by(sort_by, sort_order)
 
     return render_template('rss.html', feeds=feeds, feed_contents=feed_contents)
 
@@ -75,7 +76,7 @@ def summarize():
     for feed in feeds:
         entries = summarize_content(feed.url)
         db.session.add_all(entries)
-    db.session.commit()
+        db.session.commit()
     flash('Articles Summarized successfully!', 'success')
     return redirect(url_for('index'))
 

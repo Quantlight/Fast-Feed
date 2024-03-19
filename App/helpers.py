@@ -8,6 +8,8 @@ from summarizer import ai_summarizer
 import wikipedia
 from bs4 import BeautifulSoup
 from datetime import datetime
+from dateutil import parser
+
 
 def is_valid_rss(url):
     try:
@@ -53,7 +55,7 @@ def summarize_content(url):
     
     return entries
 
-def sort_articles_by(sort_by):
+def sort_articles_by(sort_by, sort_order):
     feeds = RSSFeed.query.all()
     feed_contents = {}
     
@@ -62,16 +64,24 @@ def sort_articles_by(sort_by):
 
     for feed in feeds:
         if sort_by == 'link':
-            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.link).all()
+            if sort_order == 'asc':
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.feed_id.asc()).all()
+            else:
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.feed_id.desc()).all()
         elif sort_by == 'title':
-            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title).all()
+            if sort_order == 'asc':
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.title.asc()).all()
+            else:
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.title.desc()).all()
         else:
-            sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.desc()).all()
+            if sort_order == 'asc':
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.date.asc()).all()
+            else:
+                sorted_entries = FeedEntry.query.order_by(FeedEntry.date.desc()).all()
         
         feed_contents[feed.id] = sorted_entries
 
     return feeds, feed_contents
-
 def article_content(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
@@ -165,8 +175,10 @@ def get_domain(url):
         return match.group(1)
     else:
         return None
-
 def format_datetime(dateTimeString):
-    date = datetime.fromisoformat(dateTimeString)  # Parse the ISO 8601 date string
-    formatted_date = date.strftime("%A, %B %d, %Y %I:%M %p")
-    return formatted_date
+    try:
+        date = parser.parse(dateTimeString)
+        formatted_date = date.strftime("%A, %B %d, %Y %I:%M %p")
+        return formatted_date
+    except ValueError:
+        return "Invalid datetime format"
