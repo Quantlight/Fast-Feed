@@ -120,8 +120,8 @@
             {% endfor %}
         </ul>
     </div>
-    
 
+    <!-- Sidebar -->
     <div id="sidebar">
         <div class="sidebar-header">
             <h3>Subscribed Websites</h3>
@@ -142,7 +142,7 @@
                         {% endif %}
                         <div class="feed-info">
                             <h4>{{ feed.website_name }}</h4>
-                            <p>{{ feed.url }}</p>
+                            <a href="{{feed.url}}">Link</a>
                         </div>
                     </div>
                     <div class="feed-actions">
