@@ -38,7 +38,8 @@ def add_feed():
             refresh_feed()
             flash('RSS feed added successfully!', 'success')
         else:
-            flash('Failed to fetch RSS feed data!', 'error')
+            error_status = response.status_code
+            flash(f'Failed to fetch RSS feed data! error status code {error_status}', 'error')
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
     return redirect(url_for('index'))
