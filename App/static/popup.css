@@ -26,7 +26,17 @@
     font-size: 28px;
     font-weight: bold;
   }
-  
+
+.input-group{
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control-popup {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
 .close:hover,
 .close:focus {
     color: black;

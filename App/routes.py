@@ -26,11 +26,12 @@ def load_page(page_name):
 @app.route('/add', methods=['POST'])
 def add_feed():
     url = request.form['url']
+    title = request.form['title']
     try:
         response = requests.get(url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'lxml')
-            website_name = soup.title.string.strip() if soup.title else 'Unknown Website'
+            website_name = title if title else soup.title.string.strip() if soup.title else 'Unknown Website'
             icon_tag = soup.find("icon")
             icon_url = icon_tag.text if icon_tag else get_favicon(url)
             new_feed = RSSFeed(url=url, website_name=website_name, icon=icon_url)
