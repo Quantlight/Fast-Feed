@@ -38,6 +38,7 @@
 
 .nav-item {
     margin-left: 15px; /* Adjust spacing between nav items */
+    cursor: pointer;
 }
 
 .nav-link {
