@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='test.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='scrollcontainer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='scrolltotop.css') }}">
 
 </head>
 <body>
@@ -54,6 +55,7 @@
         <button type="submit">Summarize Articles</button>
         
     </form>
+    <button id="back-to-top" title="Back to Top">&#8593;</button>
 
     <div id="popup" class="popup">
         <div id="popup" class="popup-content">
@@ -231,7 +233,7 @@
     <script src="{{ url_for('static', filename='rss.js') }}"></script>
     <script src="{{ url_for('static', filename='copy.js') }}"></script>
     <script src="{{ url_for('static', filename='scrollcontainer.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='scrolltotop.js') }}"></script>
 
 </body>
 </html>
