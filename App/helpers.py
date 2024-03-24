@@ -9,6 +9,7 @@ import wikipedia
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil import parser
+from urllib.parse import urljoin, urlparse
 
 
 def is_valid_rss(url):
@@ -24,13 +25,14 @@ def get_feed_contents(url):
     
     for entry in feed.entries:
         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
+        content = print_elements_from_url(entry.link)
         if not existing_entry:
             new_entry = FeedEntry(
                 title = entry.title,
                 date = format_datetime(entry.published) if hasattr(entry, 'published') else None,
                 author = entry.author if hasattr(entry, 'author') else 'None',
                 raw_description=entry.description,
-                short_description=entry.summary,
+                short_description=content,
                 full_content=entry.content[0].value if hasattr(entry, 'content') else '',
                 img=entry.enclosures[0].href if hasattr(entry, 'enclosures') and entry.enclosures else '',
                 link=entry.link,
@@ -46,7 +48,7 @@ def summarize_content(url):
     for entry in feed.entries:
         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
         if existing_entry and not existing_entry.summarized_content:
-            full_content = article_content(entry.link)
+            full_content = print_elements_from_url(entry.link)
             full_content = remove_blank_lines(full_content)
             summarized_content = ai_summarizer(full_content)
             print(summarized_content)
@@ -55,30 +57,28 @@ def summarize_content(url):
     
     return entries
 
-def sort_articles_by(sort_by, sort_order):
+def sort_articles_by(sort_by, sort_order, limit=20, offset=0):
     feeds = RSSFeed.query.all()
     feed_contents = {}
-    
-    if not feeds:  # If there are no feeds, return empty lists
+    if not feeds:
         return [], {}
 
     for feed in feeds:
         if sort_by == 'link':
             if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.feed_id.asc()).all()
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.feed_id.asc()).limit(limit).offset(offset).all()
             else:
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.feed_id.desc()).all()
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.feed_id.desc()).limit(limit).offset(offset).all()
         elif sort_by == 'title':
             if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.title.asc()).all()
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title.asc()).limit(limit).offset(offset).all()
             else:
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.title.desc()).all()
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title.desc()).limit(limit).offset(offset).all()
         else:
             if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.date.asc()).all()
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.asc()).limit(limit).offset(offset).all()
             else:
-                sorted_entries = FeedEntry.query.order_by(FeedEntry.date.desc()).all()
-        
+                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.desc()).limit(limit).offset(offset).all()
         feed_contents[feed.id] = sorted_entries
 
     return feeds, feed_contents
@@ -175,6 +175,7 @@ def get_domain(url):
         return match.group(1)
     else:
         return None
+    
 def format_datetime(dateTimeString):
     try:
         date = parser.parse(dateTimeString)
@@ -182,3 +183,53 @@ def format_datetime(dateTimeString):
         return formatted_date
     except ValueError:
         return "Invalid datetime format"
+    
+# Extract contents from urls
+def check_keywords(content):
+    parent_element = content.find_parent(class_=lambda x: x and ('comment' in x or 
+                                                                 'Popular' in x or 
+                                                                 'LinkStackWrapper' in x or 
+                                                                 'Footer' in x or 
+                                                                 'answers' in x or 
+                                                                 'copyright' in x or 
+                                                                 'more' in x or 
+                                                                 'newsletter' in x or 
+                                                                 'basis' in x or 
+                                                                 'hidden' in x))
+    return parent_element is not None
+
+def get_img_src(img_src, url):
+    base_url = urljoin(url, '/')  # Get the base URL
+    if img_src.startswith('/'):
+        # Relative URL from the root
+        img_url = urljoin(base_url, img_src)
+    elif img_src.startswith('http'):
+        img_url = img_src
+    else:
+        # Relative URL from the current page
+        img_url = url + '/' + img_src
+    return img_url
+    
+def print_elements_from_url(url):
+    # Send a GET request to the URL and get the HTML content
+    response = requests.get(url)
+    
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'lxml')
+        result = []
+
+        contents = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'img'])
+        result.append("Content:")
+        for content in contents:
+            if not check_keywords(content):
+                    if content.name == 'img':
+                        img_src = get_img_src(content['src'], url)
+                        result.append(f"<img src='{img_src}'>")
+                    else:
+                        result.append(content.text.strip())
+
+        return '\n'.join(result)  # Concatenate the list items into a single string with newline characters
+    else:
+        return f"Failed to fetch the URL. Status code: {response.status_code}"
