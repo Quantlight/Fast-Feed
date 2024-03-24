@@ -25,8 +25,8 @@ def get_feed_contents(url):
     
     for entry in feed.entries:
         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
-        content = print_elements_from_url(entry.link)
         if not existing_entry:
+            content = print_elements_from_url(entry.link)
             new_entry = FeedEntry(
                 title = entry.title,
                 date = format_datetime(entry.published) if hasattr(entry, 'published') else None,
