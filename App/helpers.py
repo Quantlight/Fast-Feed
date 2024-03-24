@@ -187,7 +187,7 @@ def format_datetime(dateTimeString):
     
 # Extract contents from urls
 def check_keywords(content):
-    parent_element = content.find_parent(class_=lambda x: x and ('comment' in x or 
+    parent_element = content.find_parent(class_=lambda x: x and ('comments' in x or 
                                                                  'Popular' in x or 
                                                                  'LinkStackWrapper' in x or 
                                                                  'Footer' in x or 
@@ -196,7 +196,12 @@ def check_keywords(content):
                                                                  'more' in x or 
                                                                  'newsletter' in x or 
                                                                  'basis' in x or 
-                                                                 'hidden' in x))
+                                                                 'hidden' in x or 
+                                                                 'widget' in x or 
+                                                                 'sharing' in x or
+                                                                 'navigation' in x or 
+                                                                 'menu' in x or 
+                                                                 'cookie' in x))
     return parent_element is not None
 
 def get_img_src(img_src, url):
@@ -213,7 +218,10 @@ def get_img_src(img_src, url):
     
 def print_elements_from_url(url):
     # Send a GET request to the URL and get the HTML content
-    response = requests.get(url)
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/122.0.2365.106'
+        }
+    response = requests.get(url, headers=headers)
     
     # Check if the request was successful
     if response.status_code == 200:
