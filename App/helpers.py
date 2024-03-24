@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil import parser
 from urllib.parse import urljoin, urlparse
-
+import markdown2
 
 def is_valid_rss(url):
     try:
@@ -51,6 +51,7 @@ def summarize_content(url):
             full_content = print_elements_from_url(entry.link)
             full_content = remove_blank_lines(full_content)
             summarized_content = ai_summarizer(full_content)
+            summarized_content = markdown2.markdown(summarized_content, extras=["markdown-urls"])
             print(summarized_content)
             existing_entry.summarized_content = summarized_content
             entries.append(existing_entry)  # Append existing entry for tracking updated entries
