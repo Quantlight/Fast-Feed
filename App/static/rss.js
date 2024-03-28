@@ -55,8 +55,6 @@ function closePopup() {
 }
 
 $(document).ready(function() {
-    var isResizing = false;
-    var lastDownX = 0;
 
     $('#sidebarToggle').on('click', function() {
         $('#sidebar').toggleClass('active');
@@ -66,19 +64,17 @@ $(document).ready(function() {
         $('#sidebar').removeClass('active');
     });
 
-    $('#resizeHandle').on('mousedown', function(e) {
-        isResizing = true;
-        lastDownX = e.clientX;
-    });
-
-    $(document).on('mousemove', function(e) {
-        if (!isResizing) return;
-
-        var offsetRight = $(window).width() - (e.clientX + $('#sidebar').width());
-        $('#sidebar').css('width', $(window).width() - offsetRight);
-    });
-
-    $(document).on('mouseup', function(e) {
-        isResizing = false;
-    });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('themeToggle');
+    document.documentElement.setAttribute('data-theme', 'dark')
+  
+    themeToggle.addEventListener('click', function() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+      document.documentElement.setAttribute('data-theme', newTheme);
+    });
+  });
+  

@@ -18,13 +18,13 @@
 
 .navbar-brand {
     font-weight: 500;
-    color: #333; /* Brand/logo text color */
+    color: var(--text); /* Brand/logo text color */
     margin-left: 10px;
     margin-right: auto;
 }
 
 .navbar-toggler {
-    color: #333; /* Hamburger icon color */
+    color: var(--text); /* Hamburger icon color */
     border: none; /* Remove default button border */
     background: none; /* Remove default button background */
 }
@@ -42,20 +42,20 @@
 }
 
 .nav-link {
-    color: #333; /* Nav link text color */
+    color: var(--text); /* Nav link text color */
     text-decoration: none; /* Remove underline from links */
     padding: 10px; /* Add padding to links */
 }
 
 .btn-success {
-    background-color: #28a745; /* Success button background color */
-    border-color: #28a745; /* Success button border color */
+    background-color: var(--main-color); /* Success button background color */
+    border-color: var(--main-color-lite); /* Success button border color */
     padding: 8px 16px; /* Adjust padding for the success button */
 }
 
 /* Hover effect for nav links */
 .nav-link:hover {
-    color: #28a745; /* Change text color on hover */
-    text-decoration: underline; 
+    color: var(--secondary); /* Change text color on hover */
+    transform: translateY(2px) ;
     transition: all 0.5s ease-in-out;
 }

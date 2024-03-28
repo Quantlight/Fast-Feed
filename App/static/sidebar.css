@@ -37,17 +37,13 @@
   /* Sidebar Close button */
 #sidebarClose {
     float: right;
+    
 }
 
 .sidebar-header {
-    border-radius: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.445);
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px); /* Apply blur effect */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  padding: 20px;
+  display: flex;
+  align-items: center;
   }
   
 .subscribed-websites {
@@ -66,11 +62,6 @@
 .subscribed-websites li {
     margin-bottom: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #6c757d;
-  }
-  
-.subscribed-websites li:last-child {
-    border-bottom: none;
   }
   
 #subscribed-article-icon {
@@ -85,8 +76,8 @@
 
 .feed-item {
     margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid var(--text);
+    border-radius: 10px;
     padding: 10px;
     display: flex;
     justify-content: space-between;
@@ -115,26 +106,9 @@
 
 .feed-link {
     margin-bottom: 5px;
-    color: blue;
+    color: var(--secondary);
     text-decoration: underline;
 }
-
-.btn {
-    text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
-.btn-sm {
-    font-size: 12px;
-}
-
-
 
 @keyframes blurAnimation {
     0% {

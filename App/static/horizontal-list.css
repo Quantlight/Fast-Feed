@@ -1,4 +1,8 @@
 /* Custom CSS for horizontal display of subscribed websites */
+.subscribed-websites-main {
+  margin-top: 10px;
+}
+
 .subscribed-websites-main ul {
   list-style-type: none;
   padding: 0;
@@ -19,6 +23,7 @@
   text-align: center; /* Center text horizontally */
   width: 200px; /* Set a fixed width for each item */
   min-height: 200px;
+  border-color: var(--text);
 }
 
 .subscribed-websites-main .feed-item h4 {

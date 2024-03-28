@@ -10,10 +10,10 @@
   }
   
 .popup-content {
-    background-color: white;
+    background-color: var(--bg);
     width: 400px;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -23,23 +23,28 @@
 .close {
     color: #aaa;
     float: right;
+    margin-top: -10px;
     font-size: 28px;
     font-weight: bold;
   }
 
-.input-group{
+.input-group-popup{
   display: flex;
   flex-direction: column;
 }
 
-.form-control-popup {
+.form-popup {
   width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--bg);
 }
+
+
 .close:hover,
 .close:focus {
-    color: black;
+    color: var(--text);
     text-decoration: none;
     cursor: pointer;
   }
