@@ -183,6 +183,14 @@
   --accent95: #d12600;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0; /* Start with full transparency */
+  }
+  100% {
+    opacity: 1; /* End with full opacity */
+  }
+}
 
 body{
   background-color: var(--bg);
@@ -190,7 +198,9 @@ body{
   font-weight: 400;
   color: var(--text);
   scroll-behavior: smooth;
-  transition: all 0.5s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
+  animation-fill-mode: backwards;
+  transition: all 0.5s ease;
 }
 
 h1 {
