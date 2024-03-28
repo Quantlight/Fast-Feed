@@ -54,27 +54,4 @@ function closePopup() {
   popup.style.display = "none";
 }
 
-$(document).ready(function() {
 
-    $('#sidebarToggle').on('click', function() {
-        $('#sidebar').toggleClass('active');
-    });
-
-    $('#sidebarClose').on('click', function() {
-        $('#sidebar').removeClass('active');
-    });
-
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const themeToggle = document.getElementById('themeToggle');
-    document.documentElement.setAttribute('data-theme', 'dark')
-  
-    themeToggle.addEventListener('click', function() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  
-      document.documentElement.setAttribute('data-theme', newTheme);
-    });
-  });
-  
