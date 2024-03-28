@@ -232,7 +232,7 @@ img[src] {
   text-decoration: none;
   padding: 5px 10px;
   border-radius: 3px;
-  color: white;
+  color: var(--primary);
 }
 
 .btn-sm {
@@ -270,6 +270,3 @@ select, select option {
   color: var(--text);
 }
 
-.container h1 {
-  linear-gradient(120deg, var(--primary), var(--accent))
-}

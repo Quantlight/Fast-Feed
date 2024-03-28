@@ -47,11 +47,7 @@
     padding: 10px; /* Add padding to links */
 }
 
-.btn-success {
-    background-color: var(--main-color); /* Success button background color */
-    border-color: var(--main-color-lite); /* Success button border color */
-    padding: 8px 16px; /* Adjust padding for the success button */
-}
+
 
 /* Hover effect for nav links */
 .nav-link:hover {

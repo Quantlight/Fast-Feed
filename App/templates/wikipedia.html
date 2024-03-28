@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Wikipedia Content</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedia Summarizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='manual.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
 
     <style>
         pre {
@@ -11,7 +18,23 @@
     </style>
 </head>
 <body>
-    <h1>Enter a Wikipedia Link</h1>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">RSS Feed Manager</a>
+            <ul class="navbar-nav" id="navbarNav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/youtube">Youtube</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/wikipedia">Wikipedia</a>
+
+                <li class="nav-item">
+                    <button id="themeToggle">Toggle Theme</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Wikipedia Content Summarizer </h1>
     <form action="{{ url_for('wikipedia_content') }}" method="post">
         <input type="text" name="wiki_link" placeholder="Wikipedia Link" required>
         <button type="submit">Summarize Content</button>
@@ -24,5 +47,7 @@
     <h2>Summarized Content</h2>
     <pre>{{ summary }}</pre>
     {% endif %}
+
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </body>
 </html>

@@ -1,5 +1,4 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
 }
@@ -23,23 +22,9 @@ label {
 input[type="text"] {
     width: 300px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--accent);
     border-radius: 5px;
     margin-bottom: 15px;
-}
-
-button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    border-radius: 5px;
 }
 
 h2 {
