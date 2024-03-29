@@ -33,6 +33,10 @@
   flex-direction: column;
 }
 
+.input-group-popup input {
+  color: var(--text);
+}
+
 .form-popup {
   width: 100%;
   margin-bottom: 10px;

@@ -6,8 +6,8 @@
     left: -100% ;
     height: calc(100% - 70px); /* Subtract navbar height from the viewport height */
     z-index: 50;
-    background: rgba(255, 255, 255, 0.445);
-    color: #000000;
+    background: rgba(255, 255, 255, 0);
+    color: var(--text);
     transition: left 0.5s cubic-bezier(0.42, 0, 0.58, 1);
     overflow-y: scroll;
     resize: horizontal;

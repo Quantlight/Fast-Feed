@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
     requestAnimationFrame(() => {
-        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'light');
       });
   
     themeToggle.addEventListener('click', function() {
