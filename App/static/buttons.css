@@ -1,0 +1,28 @@
+.buttons-container {
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    z-index: 1;
+    
+}
+
+.buttons-container-column {
+    position: fixed; /* Ensure it's positioned relative to the viewport */
+    left: -100px;
+    bottom: 10px;
+    width: fit-content;
+    height: fit-content;
+}
+.buttons-container-column ul {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+}
+
+.buttons-container-column:hover {
+    left: 0;
+    transition: all 1s ease-in-out;
+    
+}

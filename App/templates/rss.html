@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='scrolltotop.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='flash-messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
+
 
 </head>
 <body>
@@ -37,23 +39,29 @@
                 <li class="nav-item">
                     <a class="nav-link" id="add_articles">Add Feed</a>
                 </li>
-                <li class="nav-item">
-                    <form action="/refresh" method="get">
-                        <button type="submit">Refresh Articles</button>
-                    </form>
-                </li>
-                <li class="nav-item">
-                    <form action="/summarize" method="get">
-                        <button type="submit">Summarize Articles</button>
-                    </form>
-                </li>
-                <li class="nav-item">
-                    <button id="themeToggle">Toggle Theme</button>
-                </li>
             </ul>
         </div>
     </nav>
 
+    <div class="buttons-container">
+        <div class="buttons-container-column">
+            <ul>
+            <li>
+                <form action="/refresh" method="get">
+                    <button type="submit">Refresh Articles</button>
+                </form>
+            </li>
+            <li>
+                <form action="/summarize" method="get">
+                    <button type="submit">Summarize Articles</button>
+                </form>
+            </li>
+            <li>
+                <button id="themeToggle">Toggle Theme</button>
+            </li>
+            </ul>
+        </div>
+    </div>  
 <div class="container">
     <h1>Information Made Simpler<div class="animated-border"></div></h1>
     <div id="back-to-top-div"> <button id="back-to-top" title="Back to Top">&#8593;</button></div>
@@ -93,7 +101,8 @@
             {% endif %}
         {% endwith %}
     </div>
-
+    <button id="scrollUp">Scroll Up</button>
+    <button id="scrollDown">Scroll Down</button>
     <!-- Section to list subscribed websites -->
     <div class="subscribed-websites-main">
         <h2>Subscribed Websites</h2>
@@ -244,7 +253,7 @@
             {% endfor %}
         </ul>
     </div>
-    
+
 
     
     <!-- Material-UI JavaScript -->

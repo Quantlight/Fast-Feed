@@ -6,7 +6,7 @@
 
 .list-group {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   grid-gap: 20px;
   word-wrap: break-word;
 }
@@ -16,6 +16,8 @@
   border-radius: 5px;
   padding: 20px;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+  max-height: min-content;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 

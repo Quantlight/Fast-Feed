@@ -27,10 +27,12 @@
     color: var(--primary);
     transition: color 1s ease;
 }
+
 .navbar-toggler {
     color: var(--text); /* Hamburger icon color */
     border: none; /* Remove default button border */
     background: none; /* Remove default button background */
+    display: none; /* Hide by default */
 }
 
 .navbar-nav {
@@ -54,6 +56,28 @@
 /* Hover effect for nav links */
 .nav-link:hover {
     color: var(--secondary); /* Change text color on hover */
-    transform: translateY(2px) ;
+    transform: translateY(2px);
     transition: all 0.5s ease-in-out;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .navbar-nav {
+        display: none; /* Hide nav links */
+    }
+
+    .navbar-toggler {
+        display: block; /* Show the toggler button */
+    }
+}
+
+/* Media query for larger devices */
+@media (min-width: 769px) {
+    .navbar-nav {
+        display: flex; /* Show nav links */
+    }
+
+    .navbar-toggler {
+        display: none; /* Hide the toggler button */
+    }
 }

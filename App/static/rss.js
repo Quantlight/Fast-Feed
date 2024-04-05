@@ -54,4 +54,27 @@ function closePopup() {
   popup.style.display = "none";
 }
 
+let scrollInterval;
+
+document.getElementById('scrollUp').addEventListener('mousedown', function() {
+    scrollInterval = setInterval(function() {
+        document.querySelector('.list-group-item').scrollTop -= 50; // Scroll up by 50px
+    }, 100); // Adjust the interval as needed
+});
+
+document.getElementById('scrollDown').addEventListener('mousedown', function() {
+    scrollInterval = setInterval(function() {
+        document.querySelector('.list-group-item').scrollTop += 50; // Scroll down by 50px
+    }, 100); // Adjust the interval as needed
+});
+
+// Clear the interval on mouseup or mouseout to stop scrolling
+document.getElementById('scrollUp').addEventListener('mouseup', clearScrollInterval);
+document.getElementById('scrollUp').addEventListener('mouseout', clearScrollInterval);
+document.getElementById('scrollDown').addEventListener('mouseup', clearScrollInterval);
+document.getElementById('scrollDown').addEventListener('mouseout', clearScrollInterval);
+
+function clearScrollInterval() {
+    clearInterval(scrollInterval);
+}
 
