@@ -28,7 +28,8 @@ def add_feed():
     url = request.form['url']
     title = request.form['title']
     try:
-        response = requests.get(url)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/122.0.2365.106'}
+        response = requests.get(url, headers=headers)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'lxml')
             website_name = title if title else soup.title.string.strip() if soup.title else 'Unknown Website'

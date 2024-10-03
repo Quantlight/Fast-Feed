@@ -5,7 +5,6 @@ import time
 import os
 load_dotenv() 
 
-
 def ai_summarizer(news_info):
     # Get Your own key from Cohere Website 
     cohere_api_key = os.getenv("API-KEY")

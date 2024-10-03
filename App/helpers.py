@@ -196,12 +196,15 @@ def check_keywords(content):
                                                                  'more' in x or 
                                                                  'newsletter' in x or 
                                                                  'basis' in x or 
-                                                                 'hidden' in x or 
                                                                  'widget' in x or 
                                                                  'sharing' in x or
                                                                  'navigation' in x or 
                                                                  'menu' in x or 
-                                                                 'cookie' in x))
+                                                                 'cookie' in x or
+                                                                 'article-list' in x or
+                                                                 'header-overlay' in x or
+                                                                 'header-height' in x or
+                                                                 'meta-stats' in x))
     return parent_element is not None
 
 def get_img_src(img_src, url):
@@ -230,7 +233,6 @@ def print_elements_from_url(url):
         result = []
 
         contents = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'img'])
-        result.append("Content:")
         for content in contents:
             if not check_keywords(content):
                     if content.name == 'img':
