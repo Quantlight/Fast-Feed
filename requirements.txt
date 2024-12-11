@@ -1,0 +1,13 @@
+cohere
+googletrans
+feedparser
+requests
+markdown2
+beautifulsoup4
+wikipedia
+Flask-SQLAlchemy
+Flask
+youtube-transcript-api
+article_parser
+py-dateutil
+python-dotenv
