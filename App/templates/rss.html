@@ -180,79 +180,63 @@
         </form>
     </div>
     <!-- List of articles -->
-    <div id="articles-list" class="resizable">
-        <ul class="list-group mt-4">
-            {% for feed in feeds %}
-                {% for entry in feed_contents[feed.id] %}
-                    <li class="list-group-item">
-                        <!-- Other content omitted for brevity -->
-                        <h3>{{ entry.title }}</h3>
-                        <p>Date: {{ entry.date }}</p>
-                        <p>Author: {{ entry.author }}</p>
-                        <!-- <h2>Content:</h2> -->
-                        <!-- Added a class for Contents -->
-                        <!-- <div class="short-description">{{ entry.short_description | safe}}</div> -->
-                        <!-- <h2>Summary:</h2> -->
-                        <!-- Added a class for Summarized content -->
-                        <!-- <div class="summarized-content">
-                            {% if entry.summarized_content %}
-                                {{ entry.summarized_content | safe }}
+<div id="articles-list" class="resizable">
+    <ul class="list-group mt-4">
+        {% for entry in sorted_entries %}
+            <li class="list-group-item">
+                <!-- Other content omitted for brevity -->
+                <h3>{{ entry.title }}</h3>
+                <p>Date: {{ entry.date }}</p>
+                <p>Author: {{ entry.author }}</p>
+                <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                <p>Feed ID: {{ entry.feed_id }}</p>
+                <p>Account ID: {{ entry.account_id }}</p>
+                <div class="btn-group" role="group">
+                    <form action="/toggle_unread/{{ entry.id }}" method="post">
+                        <button type="submit" class="btn btn-secondary{% if entry.is_unread %} btn-success{% endif %}">
+                            {% if entry.is_unread %}
+                                <i class="fas fa-envelope-open-text"></i> <!-- Icon for unread state -->
+                                Unread
                             {% else %}
-                                <p>No summarized content available. You can Click on Summarized Article button to Generate a summary. </p>
+                                <i class="far fa-envelope"></i> <!-- Icon for read state -->
+                                Read
                             {% endif %}
-                        </div> -->
-                        <!-- {% if entry.img %}
-                            <img src="{{ entry.img }}" alt="Image" class="img-fluid">
-                        {% endif %} -->
-                        <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
-                        <p>Feed ID: {{ entry.feed_id }}</p>
-                        <p>Account ID: {{ entry.account_id }}</p>
-                        <div class="btn-group" role="group">
-                            <form action="/toggle_unread/{{ entry.id }}" method="post">
-                                <button type="submit" class="btn btn-secondary{% if entry.is_unread %} btn-success{% endif %}">
-                                    {% if entry.is_unread %}
-                                        <i class="fas fa-envelope-open-text"></i> <!-- Icon for unread state -->
-                                        Unread
-                                    {% else %}
-                                        <i class="far fa-envelope"></i> <!-- Icon for read state -->
-                                        Read
-                                    {% endif %}
-                                </button>
-                            </form>
-                            <form action="/toggle_starred/{{ entry.id }}" method="post">
-                                <button type="submit" class="btn btn-secondary{% if entry.is_starred %} btn-success{% endif %}">
-                                    {% if entry.is_starred %}
-                                        <i class="fas fa-star"></i> <!-- Icon for starred state -->
-                                        Starred
-                                    {% else %}
-                                        <i class="far fa-star"></i> <!-- Icon for not starred state -->
-                                        Star
-                                    {% endif %}
-                                </button>
-                            </form>
-                            <form action="/toggle_read_later/{{ entry.id }}" method="post">
-                                <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} btn-success{% endif %}">
-                                    {% if entry.is_read_later %}
-                                        <i class="fas fa-bookmark"></i> <!-- Icon for read later state -->
-                                        Saved
-                                    {% else %}
-                                        <i class="far fa-bookmark"></i> <!-- Icon for not read later state -->
-                                        Save
-                                    {% endif %}
-                                </button>
-                            </form>
-                            <form action="javascript:void(0);">
-                                <button class="btn btn-primary copy-btn">
-                                    <i class="fas fa-copy"></i> 
-                                    Copy   
-                                </button>
-                            </form>
-                        </div>
-                    </li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
-    </div>
+                        </button>
+                    </form>
+                    <form action="/toggle_starred/{{ entry.id }}" method="post">
+                        <button type="submit" class="btn btn-secondary{% if entry.is_starred %} btn-success{% endif %}">
+                            {% if entry.is_starred %}
+                                <i class="fas fa-star"></i> <!-- Icon for starred state -->
+                                Starred
+                            {% else %}
+                                <i class="far fa-star"></i> <!-- Icon for not starred state -->
+                                Star
+                            {% endif %}
+                        </button>
+                    </form>
+                    <form action="/toggle_read_later/{{ entry.id }}" method="post">
+                        <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} btn-success{% endif %}">
+                            {% if entry.is_read_later %}
+                                <i class="fas fa-bookmark"></i> <!-- Icon for read later state -->
+                                Saved
+                            {% else %}
+                                <i class="far fa-bookmark"></i> <!-- Icon for not read later state -->
+                                Save
+                            {% endif %}
+                        </button>
+                    </form>
+                    <form action="javascript:void(0);">
+                        <button class="btn btn-primary copy-btn">
+                            <i class="fas fa-copy"></i> 
+                            Copy   
+                        </button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
 
 
     

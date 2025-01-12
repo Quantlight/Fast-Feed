@@ -13,11 +13,12 @@ app.config['SECRET_KEY'] = 'your_secret_key_here'  # Needed for flash messages
 
 @app.route('/')
 def index():
-    sort_by = request.args.get('sort_by', default='datetime')
+    sort_by = request.args.get('sort_by', default='datetime')  # Default sort by datetime
     sort_order = request.args.get('sort_order', default='desc')  # Default to descending order
-    feeds, feed_contents = sort_articles_by(sort_by, sort_order)
+    feeds, sorted_entries = sort_articles_by(sort_by, sort_order)
 
-    return render_template('rss.html', feeds=feeds, feed_contents=feed_contents)
+    return render_template('rss.html', feeds=feeds, sorted_entries=sorted_entries)
+
 
 @app.route('/<page_name>')
 def load_page(page_name):

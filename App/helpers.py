@@ -1,5 +1,6 @@
 # helpers.py
 import feedparser
+from sqlalchemy import func
 from models import RSSFeed, FeedEntry
 import article_parser
 import requests
@@ -60,30 +61,33 @@ def summarize_content(url):
     return entries
 
 def sort_articles_by(sort_by, sort_order, limit=20, offset=0):
+    # Query all feed entries across all feeds
     feeds = RSSFeed.query.all()
-    feed_contents = {}
-    if not feeds:
-        return [], {}
-
-    for feed in feeds:
-        if sort_by == 'link':
-            if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.feed_id.asc()).limit(limit).offset(offset).all()
-            else:
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.feed_id.desc()).limit(limit).offset(offset).all()
-        elif sort_by == 'title':
-            if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title.asc()).limit(limit).offset(offset).all()
-            else:
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.title.desc()).limit(limit).offset(offset).all()
+    query = FeedEntry.query
+    
+    # Apply sorting globally based on sort_by and sort_order
+    if sort_by == 'link':
+        if sort_order == 'asc':
+            query = query.order_by(FeedEntry.link.asc())
         else:
-            if sort_order == 'asc':
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.asc()).limit(limit).offset(offset).all()
-            else:
-                sorted_entries = FeedEntry.query.filter_by(feed_id=feed.id).order_by(FeedEntry.date.desc()).limit(limit).offset(offset).all()
-        feed_contents[feed.id] = sorted_entries
+            query = query.order_by(FeedEntry.link.desc())
+    elif sort_by == 'title':
+        if sort_order == 'asc':
+            query = query.order_by(FeedEntry.title.asc())
+        else:
+            query = query.order_by(FeedEntry.title.desc())
+    else:  # Default to sorting by date
+        if sort_order == 'asc':
+            query = query.order_by(func.datetime(FeedEntry.date).asc())  
+        else:
+            query = query.order_by(func.datetime(FeedEntry.date).desc()) 
 
-    return feeds, feed_contents
+
+    # Apply pagination
+    sorted_entries = query.limit(limit).offset(offset).all()
+
+    return feeds, sorted_entries
+
 def article_content(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',

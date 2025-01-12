@@ -1,6 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timezone
 
 db = SQLAlchemy()
 
@@ -17,7 +17,7 @@ class RSSFeed(db.Model):
 class FeedEntry(db.Model):
     # Article Details
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.String, nullable=False, default=datetime.now(timezone.utc))
     title = db.Column(db.String(200), nullable=False)
     author = db.Column(db.String(100))
     raw_description = db.Column(db.Text)
@@ -35,7 +35,7 @@ class FeedEntry(db.Model):
     is_unread = db.Column(db.Boolean, default=True)
     is_starred = db.Column(db.Boolean, default=False)
     is_read_later = db.Column(db.Boolean, default=False)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
 
     def __repr__(self):
         return f'<FeedEntry {self.title}>'
