@@ -1,4 +1,4 @@
-cohere==4.3.7
+cohere==4.37
 googletrans==4.0.0-rc1
 feedparser
 requests
@@ -8,3 +8,7 @@ wikipedia
 Flask-SQLAlchemy
 Flask
 youtube-transcript-api
+article-parser==1.6.0
+html2text
+python-dotenv
+trafilatura==2.0.0
