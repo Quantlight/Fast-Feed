@@ -18,7 +18,7 @@ def fetch_content(link):
             include_links=True,
             include_images=True,
             include_tables=True,
-            output_format='markdown'
+            output_format='html'
         )
         return result
     return None
