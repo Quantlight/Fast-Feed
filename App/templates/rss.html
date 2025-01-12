@@ -189,21 +189,21 @@
                         <h3>{{ entry.title }}</h3>
                         <p>Date: {{ entry.date }}</p>
                         <p>Author: {{ entry.author }}</p>
-                        <h2>Content:</h2>
+                        <!-- <h2>Content:</h2> -->
                         <!-- Added a class for Contents -->
-                        <div class="short-description">{{ entry.short_description | safe}}</div>
-                        <h2>Summary:</h2>
+                        <!-- <div class="short-description">{{ entry.short_description | safe}}</div> -->
+                        <!-- <h2>Summary:</h2> -->
                         <!-- Added a class for Summarized content -->
-                        <div class="summarized-content">
+                        <!-- <div class="summarized-content">
                             {% if entry.summarized_content %}
                                 {{ entry.summarized_content | safe }}
                             {% else %}
                                 <p>No summarized content available. You can Click on Summarized Article button to Generate a summary. </p>
                             {% endif %}
-                        </div>
-                        {% if entry.img %}
+                        </div> -->
+                        <!-- {% if entry.img %}
                             <img src="{{ entry.img }}" alt="Image" class="img-fluid">
-                        {% endif %}
+                        {% endif %} -->
                         <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
                         <p>Feed ID: {{ entry.feed_id }}</p>
                         <p>Account ID: {{ entry.account_id }}</p>
