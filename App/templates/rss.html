@@ -185,7 +185,7 @@
         {% for entry in sorted_entries %}
             <li class="list-group-item">
                 <!-- Other content omitted for brevity -->
-                <h3>{{ entry.title }}</h3>
+                <h3><a href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
                 <p>Date: {{ entry.date }}</p>
                 <p>Author: {{ entry.author }}</p>
                 <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
