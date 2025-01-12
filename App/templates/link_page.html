@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ feed.website_name }} - Article</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='rss.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='link_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 80px; /* Offset to prevent content from overlapping navbar */
+        }
+        .navbar {
+            background-color: var(--primary); /* Primary background color */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">RSS Feed Manager</a>
+            <ul class="navbar-nav" id="navbarNav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/youtube">Youtube</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/wikipedia">Wikipedia</a>
+
+                <li class="nav-item">
+                    <button id="themeToggle">Toggle Theme</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1 class="title">Article for {{ feed.website_name }}</h1>
+            <p><a href="{{ feed.url }}" target="_blank" class="visit-link">Visit Feed</a></p>
+        </header>
+
+        {% if entry %}
+        <section class="article-container">
+            <h3 class="article-title">{{ entry.title }}</h3>
+            <p class="article-meta">Date: {{ entry.date }} | Author: {{ entry.author }}</p>
+            <p class="article-link">Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+            <p class="article-meta">Feed ID: {{ entry.feed_id }} | Account ID: {{ entry.account_id }}</p>
+
+            <div class="short-description">
+                <h4 class="section-title">Short Description:</h4>
+                <p>{{ entry.short_description | safe }}</p>
+            </div>
+
+            <div class="full-content">
+                <h4 class="section-title">Full Content:</h4>
+                <p>{{ entry.full_content | safe }}</p>
+            </div>
+
+            <div class="summarized-content">
+                {% if entry.summarized_content %}
+                    <h4 class="section-title">Summarized Content:</h4>
+                    <p>{{ entry.summarized_content | safe }}</p>
+                {% else %}
+                    <p>No summarized content available. You can Click on Summarized Article button to generate a summary.</p>
+                {% endif %}
+            </div>
+        </section>
+        {% else %}
+        <section id="articles-list">
+            <ul class="list-group">
+                {% for entry in feed_contents %}
+                    <li class="list-group-item">
+                        <h3>{{ entry.title }}</h3>
+                        <p>Date: {{ entry.date }} | Author: {{ entry.author }}</p>
+                        <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                        <p>Feed ID: {{ entry.feed_id }} | Account ID: {{ entry.account_id }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+    </div>
+
+    <!-- Theme Script -->
+    <script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+</html>

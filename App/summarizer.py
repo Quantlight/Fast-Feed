@@ -17,7 +17,6 @@ def ai_summarizer(news_info):
     for attempt in range(1, max_attempts + 1):
         try:
             summary = co.summarize(text=news_info,
-                                   model="summarize-xlarge",
                                    length="long",
                                    format="bullets",
                                    temperature=0.9)

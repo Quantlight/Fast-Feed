@@ -158,3 +158,42 @@ def wikipedia_content():
         except:
             print("Error Collecting info about wikipedia articles")
     return render_template('wikipedia.html')
+
+@app.route('/link/<path:param>', methods=['GET'])
+def link_page(param):
+    try:
+        # Check if param is an integer (ID)
+        if param.isdigit():
+            feed = RSSFeed.query.get(int(param))  # Fetch feed by ID
+            if not feed:
+                flash(f'No feed found with the ID: {param}', 'error')
+                return redirect(url_for('index'))
+
+            # Get the specific feed entry by ID
+            feed_contents = FeedEntry.query.filter_by(feed_id=feed.id).all()
+            entry = next((entry for entry in feed_contents if entry.id == int(param)), None)
+            if not entry:
+                flash(f'No article found with the provided ID: {param}', 'error')
+                return redirect(url_for('index'))
+            return render_template('link_page.html', feed=feed, entry=entry)
+
+        else:
+            # Handle URL link case (if the param is not an ID)
+            feed_entry = FeedEntry.query.filter_by(link=param).first()  # Fetch feed entry by URL (link)
+            if feed_entry:
+                # If feed entry is found, pass related feed and entry to template
+                return render_template('link_page.html', feed=feed_entry.feed, entry=feed_entry)
+
+            # If no feed entry is found by URL, try fetching the associated RSS feed and its entries
+            feed = RSSFeed.query.filter_by(url=param).first()
+            if not feed:
+                flash(f'No feed found for the given URL: {param}', 'error')
+                return redirect(url_for('index'))
+
+            feed_contents = FeedEntry.query.filter_by(feed_id=feed.id).all()
+            return render_template('link_page.html', feed=feed, feed_contents=feed_contents, link=param)
+
+    except Exception as e:
+        flash(f'Error: {str(e)}', 'error')
+        return redirect(url_for('index'))
+

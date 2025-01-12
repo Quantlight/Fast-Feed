@@ -11,6 +11,7 @@ from datetime import datetime
 from dateutil import parser
 from urllib.parse import urljoin, urlparse
 import markdown2
+from custom_scraper import fetch_content
 
 def is_valid_rss(url):
     try:
@@ -185,62 +186,6 @@ def format_datetime(dateTimeString):
     except ValueError:
         return "Invalid datetime format"
     
-# Extract contents from urls
-def check_keywords(content):
-    parent_element = content.find_parent(class_=lambda x: x and ('comments' in x or 
-                                                                 'Popular' in x or 
-                                                                 'LinkStackWrapper' in x or 
-                                                                 'Footer' in x or 
-                                                                 'answers' in x or 
-                                                                 'copyright' in x or 
-                                                                 'more' in x or 
-                                                                 'newsletter' in x or 
-                                                                 'basis' in x or 
-                                                                 'widget' in x or 
-                                                                 'sharing' in x or
-                                                                 'navigation' in x or 
-                                                                 'menu' in x or 
-                                                                 'cookie' in x or
-                                                                 'article-list' in x or
-                                                                 'header-overlay' in x or
-                                                                 'header-height' in x or
-                                                                 'meta-stats' in x))
-    return parent_element is not None
-
-def get_img_src(img_src, url):
-    base_url = urljoin(url, '/')  # Get the base URL
-    if img_src.startswith('/'):
-        # Relative URL from the root
-        img_url = urljoin(base_url, img_src)
-    elif img_src.startswith('http'):
-        img_url = img_src
-    else:
-        # Relative URL from the current page
-        img_url = url + '/' + img_src
-    return img_url
-    
 def print_elements_from_url(url):
-    # Send a GET request to the URL and get the HTML content
-    headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/122.0.2365.106'
-        }
-    response = requests.get(url, headers=headers)
-    
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(response.content, 'lxml')
-        result = []
-
-        contents = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'img'])
-        for content in contents:
-            if not check_keywords(content):
-                    if content.name == 'img':
-                        img_src = get_img_src(content['src'], url)
-                        result.append(f"<img src='{img_src}'>")
-                    else:
-                        result.append(content.text.strip())
-
-        return '\n'.join(result)  # Concatenate the list items into a single string with newline characters
-    else:
-        return f"Failed to fetch the URL. Status code: {response.status_code}"
+    content = fetch_content(url)
+    return content
