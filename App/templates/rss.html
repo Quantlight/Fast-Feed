@@ -25,9 +25,10 @@
 <body>
     <nav class="navbar">
         <div class="container-fluid">
-            <button id="sidebarToggle" id="sidebar-toggler">
-                &#9776; <!-- This is the Unicode character for the Menu icon -->
-            </button>
+            <!-- Removed Sidebar-->
+            <!-- <button id="sidebarToggle" id="sidebar-toggler">
+                &#9776; 
+            </button>  -->
             <a class="navbar-brand" href="#">RSS Feed Manager</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
@@ -135,7 +136,7 @@
         <div class="sidebar-header">
             <h3>Subscribed Websites</h3>
             <button id="sidebarClose" class="btn btn-danger">
-                <i class="fas fa-times"></i> <!-- Font Awesome 'X' icon -->
+                <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="subscribed-websites">
@@ -185,8 +186,8 @@
         {% for entry in sorted_entries %}
             <li class="list-group-item">
                 <!-- Other content omitted for brevity -->
-                <h3><a style="color: var(--primary);" href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
-                <p>Date: {{ entry.date }}</p>
+                <h3><a style="color: var(--primary); text-decoration:wavy;" href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
+                <p style="font-style: italic;">Date: {{ entry.date }}</p>
                 <p>Author: {{ entry.author }}</p>
                 <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
                 <p>Feed ID: {{ entry.feed_id }}</p>
