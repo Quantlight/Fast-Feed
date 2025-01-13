@@ -152,25 +152,53 @@ def extract_text_from_wikipedia(wiki_link):
     except wikipedia.exceptions.DisambiguationError as e:
         print(f"Error: {e}")
 
-# Get icon of the website
 def get_favicon(url):
-    # Get the domain from the URL
-    domain = get_domain(url)
-    if domain:
-        favicon_url = f"https://{domain}/favicon.ico"
+    # Helper function to fetch the favicon URL
+    def fetch_favicon_from_url(url):
         try:
-            # Attempt to fetch the favicon
-            response = requests.get(favicon_url)
+            response = requests.get(url)
             if response.status_code == 200:
-                return favicon_url
-            else:
-                return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+                return response.url
         except requests.RequestException:
-            # Return default favicon URL if there's an error fetching the favicon
-            return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
-    else:
-        # Return default favicon URL if domain extraction fails
+            pass
+        return None
+
+    # Extract domain from the URL
+    domain = urlparse(url).netloc
+    if not domain:
         return "https://cdn-icons-png.flaticon.com/512/4076/4076373.png"
+
+    # 1. Look for the favicon at the root of the domain
+    favicon_url = fetch_favicon_from_url(f"https://{domain}/favicon.ico")
+    if favicon_url:
+        return favicon_url
+
+    # 2. Look for <link rel="shortcut icon"> or <link rel="icon"> in HTML
+    try:
+        response = requests.get(f"https://{domain}")
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # 3. Look for Apple touch icons
+        apple_icon = soup.find('link', rel='apple-touch-icon') or soup.find('link', rel='apple-touch-icon-precomposed')
+        if apple_icon and apple_icon.get('href'):
+            apple_icon_url = urljoin(url, apple_icon['href'])
+            if fetch_favicon_from_url(apple_icon_url):
+                return apple_icon_url
+
+        # Check for <link rel="shortcut icon">
+        link = soup.find('link', rel='shortcut icon') or soup.find('link', rel='icon')
+        if link and link.get('href'):
+            favicon_url = urljoin(url, link['href'])
+            if fetch_favicon_from_url(favicon_url):
+                return favicon_url
+
+
+    except requests.RequestException:
+        pass
+
+    # 4. Use Google's favicon service as a fallback
+    return f"http://www.google.com/s2/favicons?domain={domain}"
+
 
 # Get the domain only which will exclude all the additional parameters
 def get_domain(url):
