@@ -39,5 +39,21 @@ class FeedEntry(db.Model):
     def __repr__(self):
         return f'<FeedEntry {self.title}>'
 
+class Translation(db.Model):
+    # Use 'link' as the primary key and foreign key
+    link = db.Column(db.String(200), db.ForeignKey('feed_entry.link'), primary_key=True)
+    language = db.Column(db.String(10), primary_key=True)  # Composite primary key with 'language'
+
+    # Translation fields
+    title = db.Column(db.String(200), nullable=True)
+    full_content = db.Column(db.Text, nullable=True)
+    summarized_content = db.Column(db.Text, nullable=True)
+    
+    # Relationship for easier access
+    feed_entry = db.relationship('FeedEntry', backref=db.backref('translations', lazy=True))
+
+    def __repr__(self):
+        return f'<Translation {self.language} for FeedEntry {self.link}>'
+
 def init_db(app):
     db.init_app(app)

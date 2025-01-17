@@ -1,7 +1,7 @@
 # helpers.py
 import feedparser
 from sqlalchemy import func
-from models import RSSFeed, FeedEntry
+from models import RSSFeed, FeedEntry, db
 import article_parser
 import requests
 import re
@@ -13,6 +13,7 @@ from dateutil import parser
 from urllib.parse import urljoin, urlparse
 import markdown2
 from custom_scraper import fetch_content
+from googletrans import Translator, LANGUAGES
 
 def is_valid_rss(url):
     try:
@@ -42,22 +43,63 @@ def get_feed_contents(url):
             entries.append(new_entry)
     return entries
 
-def summarize_content(url):
-    feed = feedparser.parse(url)
-    entries = []
+# def summarize_content(url):
+#     feed = feedparser.parse(url)
+#     entries = []
     
+#     for entry in feed.entries:
+#         existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
+#         if existing_entry and not existing_entry.summarized_content:
+#             full_content = print_elements_from_url(entry.link)
+#             full_content = remove_blank_lines(full_content)
+#             summarized_content = ai_summarizer(full_content)
+#             summarized_content = markdown2.markdown(summarized_content, extras=["markdown-urls"])
+#             print(summarized_content)
+#             existing_entry.summarized_content = summarized_content
+#             entries.append(existing_entry)  # Append existing entry for tracking updated entries
+    
+#     return entries
+
+def summarize_content(url):
+    # Check if the URL is a feed URL or a single article URL
+    if 'feed' in url or url.endswith('.xml') or 'rss' in url:
+        # Handle RSS feed: Summarize all articles in the feed
+        return summarize_feed(url)
+    else:
+        # Handle single article URL: Summarize only the specific article
+        return summarize_single_article_content(url)
+
+def summarize_feed(feed_url):
+    feed = feedparser.parse(feed_url)
+    entries = []
+
     for entry in feed.entries:
-        existing_entry = FeedEntry.query.filter_by(link=entry.link).first()
-        if existing_entry and not existing_entry.summarized_content:
-            full_content = print_elements_from_url(entry.link)
-            full_content = remove_blank_lines(full_content)
-            summarized_content = ai_summarizer(full_content)
-            summarized_content = markdown2.markdown(summarized_content, extras=["markdown-urls"])
-            print(summarized_content)
-            existing_entry.summarized_content = summarized_content
-            entries.append(existing_entry)  # Append existing entry for tracking updated entries
+        # Summarize each article in the feed
+        entries.extend(summarize_single_article_content(entry.link))  # Calls single article summarizer
     
     return entries
+def summarize_single_article_content(article_url):
+    # Find the article entry in the database
+    existing_entry = FeedEntry.query.filter_by(link=article_url).first()
+    
+    # If the article exists and has not been summarized yet
+    if existing_entry and not existing_entry.summarized_content:
+        # Fetch the full content, clean it, and summarize it
+        full_content = print_elements_from_url(article_url)
+        full_content = remove_blank_lines(full_content)
+        
+        # Summarize content and convert to markdown
+        summarized_content = ai_summarizer(full_content)
+        summarized_content = markdown2.markdown(summarized_content, extras=["markdown-urls"])
+        
+        # Save the summarized content in the database
+        existing_entry.summarized_content = summarized_content
+        db.session.commit()
+        
+        return [existing_entry]  # Return as a list for consistency (for both single and multiple articles)
+    
+    return []  # Return empty list if no article found or already summarized
+
 
 def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
     # Query all feed entries across all feeds
@@ -219,3 +261,18 @@ def format_datetime(dateTimeString):
 def print_elements_from_url(url):
     content = fetch_content(url)
     return content
+
+def translate_text(title, full_content, summarized_content, target_language='hi'): # Translate to Hindi
+    """
+    Translates the given text into a single target language.
+
+    :param text: The text to translate
+    :param target_language: The language code to translate the text into (e.g., 'es' for Spanish)
+    :return: The translated text
+    """    
+    translator = Translator()
+    translated_title = translator.translate(title, dest=target_language)
+    translated_content = translator.translate(full_content, dest=target_language)
+    translated_summary = translator.translate(summarized_content, dest=target_language)
+    print(f"\n Title: {translated_title}\n Content: {translated_content}\n Summary: {translated_summary}\n")
+    # return translated_title.text, translated_content.text, translated_summary.text

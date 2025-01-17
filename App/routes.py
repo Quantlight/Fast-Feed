@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 from summarizer import ai_summarizer
+import urllib.parse
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
@@ -76,12 +77,38 @@ def refresh_feed():
 @app.route('/summarize')
 def summarize():
     feeds = RSSFeed.query.all()
+    all_entries = []
+    
     for feed in feeds:
-        entries = summarize_content(feed.url)
-        db.session.add_all(entries)
-        db.session.commit()
+        # Summarize all articles from each feed
+        all_entries.extend(summarize_content(feed.url))  # Uses the same function to summarize the feed
+    
+    db.session.commit()  # Commit changes for all summarized entries
     flash('Articles Summarized successfully!', 'success')
     return redirect(url_for('index'))
+
+
+# Summarization code for single article
+
+@app.route('/summarize/<path:link>', methods=['GET'])
+def summarize_single_article(link):
+    try:
+        # Decode the link parameter (if needed)
+        decoded_link = urllib.parse.unquote(link)
+        
+        # Perform summarization for the single article
+        entries = summarize_content(decoded_link)  # This will call the right summarization method based on the link
+        
+        if entries:
+            flash('Article Summarized successfully!', 'success')
+        else:
+            flash('Failed to summarize content properly.', 'warning')
+    
+    except Exception as e:
+        flash(f'Error: {str(e)}', 'error')
+    
+    # Redirect back to the original article page
+    return redirect(url_for('link_page', param=link))
 
 # Toggle Buttons
 @app.route('/toggle_unread/<int:id>', methods=['POST'])
