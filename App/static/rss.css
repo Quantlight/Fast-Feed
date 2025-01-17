@@ -243,6 +243,7 @@ img[src] {
 
 select[name="sort_order"] {
   border: 1px solid black;
+  color: #000000;
 }
 
 .btn {
