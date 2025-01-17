@@ -21,7 +21,6 @@ class FeedEntry(db.Model):
     title = db.Column(db.String(200), nullable=False)
     author = db.Column(db.String(100))
     raw_description = db.Column(db.Text)
-    short_description = db.Column(db.Text)
     full_content = db.Column(db.Text)
     summarized_content = db.Column(db.Text)
     img = db.Column(db.String(200))

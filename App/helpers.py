@@ -34,8 +34,7 @@ def get_feed_contents(url):
                 date = format_datetime(entry.published) if hasattr(entry, 'published') else None,
                 author = entry.author if hasattr(entry, 'author') else 'None',
                 raw_description=entry.description,
-                short_description=content,
-                full_content=entry.content[0].value if hasattr(entry, 'content') else '',
+                full_content=content,
                 img=entry.enclosures[0].href if hasattr(entry, 'enclosures') and entry.enclosures else '',
                 link=entry.link,
                 feed_id=RSSFeed.query.filter_by(url=url).first().id
@@ -60,7 +59,7 @@ def summarize_content(url):
     
     return entries
 
-def sort_articles_by(sort_by, sort_order, limit=20, offset=0):
+def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
     # Query all feed entries across all feeds
     feeds = RSSFeed.query.all()
     query = FeedEntry.query
@@ -191,7 +190,6 @@ def get_favicon(url):
             favicon_url = urljoin(url, link['href'])
             if fetch_favicon_from_url(favicon_url):
                 return favicon_url
-
 
     except requests.RequestException:
         pass
