@@ -55,7 +55,7 @@ h3.article-title {
   margin-bottom: var(--spacing-small); /* Space between title and meta */
 }
 
-.article-meta {
+.article-meta .article-author {
   font-size: 1rem;
   color: black;  /* Text color */
   margin: var(--spacing-small) 0;
@@ -68,19 +68,36 @@ a {
 .article-container {
   background-color: var(--secondary);  /* Secondary background color */
   border-radius: 8px;
-  border-color: black;
+  border: 1px solid black;
   padding: var(--spacing-medium);
   margin-bottom: var(--spacing-large);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-.article-link{
-  color: black;
+.article-link {
+  position: relative;         /* Set the position to relative so that the link can be positioned within it */
+  margin: 0;                  /* Remove margin */
+  padding: 0;                 /* Remove padding */
 }
+
+.visit-link {
+  font-size: 20px;            /* Adjust icon size */
+  color: var(--primary);                /* Set the color of the icon */
+  text-decoration: none;      /* Remove the underline */
+  position: absolute;         /* Absolute position the link */
+  right: 0;                   /* Align to the right edge */
+  top: 0;                     /* Align to the top edge if needed */
+}
+
+.visit-link i {
+  margin-left: 0;             /* No extra space on the left */
+}
+
 .short-description,
 .full-content,
 .summarized-content {
   background-color: var(--bg);  /* Background color from theme */
   border-radius: 8px;
+  border: 1px solid black;
   padding: var(--spacing-medium);
   margin-top: var(--spacing-medium);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

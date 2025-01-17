@@ -20,7 +20,7 @@
             margin-top: 80px; /* Offset to prevent content from overlapping navbar */
         }
         .navbar {
-            background-color: var(--primary); /* Primary background color */
+            background-color: var(--secondary); /* Primary background color */
         }
     </style>
 </head>
@@ -28,7 +28,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">RSS Feed Manager</a>
+            <a class="navbar-brand" href="/">FAST FEED</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
                     <a class="nav-link" href="/youtube">Youtube</a>
@@ -56,13 +56,22 @@
     <!-- Main Content -->
     <div class="container">
         <header>
-            <h1 class="title">{{ entry.title }}</h1>
-            <p class="article-link"><a href="{{ entry.link }}" target="_blank" class="visit-link">Visit Webpage</a></p>
+            <h1 class="title" style="    text-shadow: 
+            1px 1px 0px black,     /* Shadow on the bottom-right */
+            -1px -1px 0px black,   /* Shadow on the top-left */
+            1px -1px 0px black,    /* Shadow on the bottom-left */
+            -1px 1px 0px black;
+            font-size: 50px; ">{{ entry.title }}</h1>
+            <!-- <p class="article-link"><a href="{{ entry.link }}" target="_blank" class="visit-link">Visit Webpage</a></p> -->
         </header>
 
         {% if entry %}
         <section class="article-container">
-            <!-- <h3 class="article-title">{{ entry.title }}</h3> -->
+            <p class="article-link">
+                <a href="{{ entry.link }}" target="_blank" class="visit-link">
+                    <i class="fas fa-external-link-alt"></i> <!-- FontAwesome icon for outgoing link -->
+                </a>
+            </p>            <!-- <h3 class="article-title">{{ entry.title }}</h3> -->
             <p class="article-meta">Date: {{ entry.date }}</p>
             <p class="article-author"> Author: {{ entry.author }}</p>
             <!-- <p class="article-link">Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p> -->
@@ -74,7 +83,7 @@
             </div> -->
 
             <div class="full-content">
-                <h4 class="section-title">Full Content:</h4>
+                <h4 class="section-title">Content</h4>
                 <p>{{ entry.full_content | safe }}</p>
             </div>
 
