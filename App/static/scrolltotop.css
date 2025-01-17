@@ -3,11 +3,11 @@
     width: 40px;
     height: 40px;
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.144);
+    background-color: var(--primary);
     backdrop-filter: blur(2px);
-    color: var(--text);
+    color: black;
     border-radius: 50%;
-    border-width: 2px;
+    border-width: 1px;
     cursor: pointer;
     font-size: fit-content;
 }
@@ -24,7 +24,7 @@
 }
 
 #back-to-top:hover {
-    border-color: var(--text);
+    border-color: black;
     transition: all 1s;
 }
 

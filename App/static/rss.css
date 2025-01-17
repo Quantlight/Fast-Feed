@@ -234,11 +234,15 @@ img[src] {
   margin: 5px;
   border-radius: 50px;
   background-color: var(--accent) ;
-  border: none;
+  border: 1px solid black;
   border-color: black;
   padding: 5px 15px;
   color: black;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+select[name="sort_order"] {
+  border: 1px solid black;
 }
 
 .btn {
@@ -266,6 +270,7 @@ img[src] {
   transform: translateY(-2px);
   box-shadow: var(--bg);
   color: black;
+  border-color: #000000;
   animation: movecolors 5s infinite alternate;
   transition: all 0.5s ease ;
   box-shadow: black;
