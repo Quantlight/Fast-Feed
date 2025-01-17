@@ -1,21 +1,21 @@
 .message {
     padding: 10px;
     border-radius: 5px;
+    border: 1px solid black;
   }
   
 .success {
-    background-color: #dff0d860;
-    border-color: #d0e9c6;
-    color: #3c763d;
+    background-color: #50cc1f;
+    border-color: black;
+    color: #000000;
   }
   
 .error {
-    background-color: #f2dede60;
-    border-color: #ebccd1;
-    color: #a94442;
+    background-color: #a94442;
+    border-color: black;
+    color: #000000;
 
   }
-
 
   #flash-messages {
     position: fixed;
@@ -24,8 +24,9 @@
     width: 50vw;
     max-width: 100%;
     padding: 0;
-    background-color: rgba(0, 0, 0, 0) ;
+    background-color: var(--primary);
     backdrop-filter: blur(5px);
+    border: none;
     color: #fff;
     border-radius: 10px;
     z-index: 10;
