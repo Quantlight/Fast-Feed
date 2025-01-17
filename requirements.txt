@@ -12,3 +12,6 @@ article-parser==1.6.0
 html2text
 python-dotenv
 trafilatura==2.0.0
+googletrans==4.0.0-rc1
+httpx==0.13.3
+legacy-cgi
