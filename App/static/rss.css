@@ -97,9 +97,9 @@
 
   --text: #fbfbfe;
   --bg: #050315;
-  --primary: #2f27ce;
+  --primary: #3c35b8;
   --secondary: #dedcff;
-  --accent: #433bff;
+  --accent: #413cd1;
   --box-shadow: 0px 6px 10px rgba(255, 255, 255, 0.2);
 
   --static: rgba(0, 0, 0, 0.5);
@@ -235,8 +235,9 @@ img[src] {
   border-radius: 50px;
   background-color: var(--accent) ;
   border: none;
+  border-color: black;
   padding: 5px 15px;
-  color: var(--text);
+  color: black;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -264,9 +265,10 @@ img[src] {
 #sort-by button:hover, .container button:hover, button:hover {
   transform: translateY(-2px);
   box-shadow: var(--bg);
+  color: black;
   animation: movecolors 5s infinite alternate;
   transition: all 0.5s ease ;
-  box-shadow: var(--box-shadow);
+  box-shadow: black;
 }
 
 @keyframes movecolors {

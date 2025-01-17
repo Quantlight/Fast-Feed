@@ -29,7 +29,7 @@
             <!-- <button id="sidebarToggle" id="sidebar-toggler">
                 &#9776; 
             </button>  -->
-            <a class="navbar-brand" href="#">RSS Feed Manager</a>
+            <a class="navbar-brand" href="#">FAST FEED</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
                     <a class="nav-link" href="/youtube">Youtube</a>
@@ -184,14 +184,14 @@
 <div id="articles-list" class="resizable">
     <ul class="list-group mt-4">
         {% for entry in sorted_entries %}
-            <li class="list-group-item">
+            <li style="background-color: var(--primary);" class="list-group-item">
                 <!-- Other content omitted for brevity -->
-                <h3><a style="color: var(--primary); text-decoration:wavy;" href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
-                <p style="font-style: italic;">Date: {{ entry.date }}</p>
-                <p>Author: {{ entry.author }}</p>
-                <p>Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
-                <p>Feed ID: {{ entry.feed_id }}</p>
-                <p>Account ID: {{ entry.account_id }}</p>
+                <h3><a style="color: black; text-decoration:wavy;" href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
+                <p style="font-style: italic;color: black;">{{ entry.date }}</p>
+                <p style="color: black;">By {{ entry.author }}</p>
+                <p style="color: black;"><a style="color: black;" href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                <!-- <p>Feed ID: {{ entry.feed_id }}</p> -->
+                <!-- <p>Account ID: {{ entry.account_id }}</p> -->
                 <div class="btn-group" role="group">
                     <form action="/toggle_unread/{{ entry.id }}" method="post">
                         <button type="submit" class="btn btn-secondary{% if entry.is_unread %} btn-success{% endif %}">
@@ -238,9 +238,6 @@
     </ul>
 </div>
 
-
-
-    
     <!-- Material-UI JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
