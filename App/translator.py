@@ -1,6 +1,6 @@
 from googletrans import Translator
 from lxml import html
-import html as html_entity
+from html import unescape
 
 def translate_html_components(title=None, content=None, summary=None, target_language='en'):
     # Initialize the Google Translate API
@@ -8,19 +8,23 @@ def translate_html_components(title=None, content=None, summary=None, target_lan
 
     # Function to translate HTML content
     def translate_html_content(html_content):
+        if not html_content:
+            return html_content  # Return as is if there's no content to translate
+
         # Parse the HTML content using lxml
         tree = html.fromstring(html_content)
 
         # Function to translate text inside tags
         def translate_element(element):
-            # Translate the element's text if it exists
+            # Translate the element's text if it exists and isn't empty
             if element.text and element.text.strip():  # Avoid translating None or empty strings
                 try:
                     translated_text = translator.translate(element.text, dest=target_language).text
                     element.text = translated_text  # Replace the text with the translated text
                 except Exception as e:
+                    # Log the error, but do not interrupt the process
                     print(f"Error translating text: {e}")
-            
+
             # Handle children (for nested tags like <strong>)
             for child in element:
                 if child.text and child.text.strip():  # Check if child element has text
@@ -32,6 +36,7 @@ def translate_html_components(title=None, content=None, summary=None, target_lan
                         translated_tail = translator.translate(child.tail, dest=target_language).text
                         child.tail = translated_tail  # Replace the tail text with the translated text
                     except Exception as e:
+                        # Log the error, but do not interrupt the process
                         print(f"Error translating tail text: {e}")
 
         # Traverse all elements and translate text nodes
@@ -43,7 +48,7 @@ def translate_html_components(title=None, content=None, summary=None, target_lan
         translated_html = html.tostring(tree, pretty_print=True, method="html").decode('utf-8')
 
         # Correct any unescaped HTML entities in the translated HTML
-        translated_html = html_entity.unescape(translated_html)
+        translated_html = unescape(translated_html)  # Call unescape properly
 
         return translated_html
 
@@ -53,7 +58,6 @@ def translate_html_components(title=None, content=None, summary=None, target_lan
     translated_summary = translate_html_content(summary) if summary else None
 
     return translated_title, translated_content, translated_summary
-
 
 # # Example usage
 # title = "<title>Example</title>"
