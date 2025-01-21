@@ -45,7 +45,7 @@
                 <li class="nav-item lang-select">
                     <!-- Language Dropdown -->
                     <form id="languageForm" method="get">
-                        <select name="lang" class="form-select" onchange="updateFormActionAndSubmit()">
+                        <select name="lang" onchange="updateFormActionAndSubmit()">
                             <option value="en" {% if request.args.get('lang') == 'en' %}selected{% endif %}>English</option>
                             <option value="hi" {% if request.args.get('lang') == 'hi' %}selected{% endif %}>Hindi</option>
                             <option value="mr" {% if request.args.get('lang') == 'mr' %}selected{% endif %}>Marathi</option>

@@ -246,6 +246,11 @@ select[name="sort_order"] {
   color: #000000;
 }
 
+select[name="lang"] {
+  border: 1px solid black;
+  color: #000000;
+}
+
 .btn {
   text-decoration: none;
   padding: 5px 10px;
