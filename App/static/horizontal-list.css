@@ -42,4 +42,5 @@
 
 .subscribed-websites-main .btn-danger {
   margin-top: 10px; /* Add space between icon and button */
+  border: 1px solid black;
 }
