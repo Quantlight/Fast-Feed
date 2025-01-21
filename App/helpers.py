@@ -262,17 +262,3 @@ def print_elements_from_url(url):
     content = fetch_content(url)
     return content
 
-def translate_text(title, full_content, summarized_content, target_language='hi'): # Translate to Hindi
-    """
-    Translates the given text into a single target language.
-
-    :param text: The text to translate
-    :param target_language: The language code to translate the text into (e.g., 'es' for Spanish)
-    :return: The translated text
-    """    
-    translator = Translator()
-    translated_title = translator.translate(title, dest=target_language)
-    translated_content = translator.translate(full_content, dest=target_language)
-    translated_summary = translator.translate(summarized_content, dest=target_language)
-    print(f"\n Title: {translated_title}\n Content: {translated_content}\n Summary: {translated_summary}\n")
-    # return translated_title.text, translated_content.text, translated_summary.text

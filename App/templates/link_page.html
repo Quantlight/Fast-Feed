@@ -22,6 +22,9 @@
         .navbar {
             background-color: var(--secondary); /* Primary background color */
         }
+        .lang-select {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -35,13 +38,28 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/wikipedia">Wikipedia</a>
-
+                </li>
                 <li class="nav-item">
                     <button id="themeToggle">Toggle Theme</button>
+                </li>
+                <li class="nav-item lang-select">
+                    <!-- Language Dropdown -->
+                    <form id="languageForm" method="get">
+                        <select name="lang" class="form-select" onchange="updateFormActionAndSubmit()">
+                            <option value="en" {% if request.args.get('lang') == 'en' %}selected{% endif %}>English</option>
+                            <option value="hi" {% if request.args.get('lang') == 'hi' %}selected{% endif %}>Hindi</option>
+                            <option value="mr" {% if request.args.get('lang') == 'mr' %}selected{% endif %}>Marathi</option>
+                            <option value="gu" {% if request.args.get('lang') == 'gu' %}selected{% endif %}>Gujarati</option>
+                            <option value="es" {% if request.args.get('lang') == 'es' %}selected{% endif %}>Spanish</option>
+                            <option value="fr" {% if request.args.get('lang') == 'fr' %}selected{% endif %}>French</option>
+                            <!-- Add more languages as needed -->
+                        </select>
+                    </form>                    
                 </li>
             </ul>
         </div>
     </nav>
+
     <div id="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -53,16 +71,16 @@
             {% endif %}
         {% endwith %}
     </div>
+
     <!-- Main Content -->
     <div class="container">
         <header>
-            <h1 class="title" style="    text-shadow: 
-            1px 1px 0px black,     /* Shadow on the bottom-right */
-            -1px -1px 0px black,   /* Shadow on the top-left */
-            1px -1px 0px black,    /* Shadow on the bottom-left */
-            -1px 1px 0px black;
-            font-size: 50px; ">{{ entry.title }}</h1>
-            <!-- <p class="article-link"><a href="{{ entry.link }}" target="_blank" class="visit-link">Visit Webpage</a></p> -->
+            <h1 class="title" style="text-shadow:
+                1px 1px 0px black,     /* Shadow on the bottom-right */
+                -1px -1px 0px black,   /* Shadow on the top-left */
+                1px -1px 0px black,    /* Shadow on the bottom-left */
+                -1px 1px 0px black;
+                font-size: 50px;">{{ entry.title }}</h1>
         </header>
 
         {% if entry %}
@@ -71,38 +89,62 @@
                 <a href="{{ entry.link }}" target="_blank" class="visit-link">
                     <i class="fas fa-external-link-alt"></i> <!-- FontAwesome icon for outgoing link -->
                 </a>
-            </p>            <!-- <h3 class="article-title">{{ entry.title }}</h3> -->
+            </p>
             <p class="article-meta">Date: {{ entry.date }}</p>
             <p class="article-author"> Author: {{ entry.author }}</p>
-            <!-- <p class="article-link">Link: <a href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p> -->
-            <!-- <p class="article-meta">Feed ID: {{ entry.feed_id }} | Account ID: {{ entry.account_id }}</p> -->
 
-            <!-- <div class="short-description">
-                <h4 class="section-title">Short Description:</h4>
-                <p>{{ entry.raw_description | safe }}</p>
-            </div> -->
-
+            <!-- Display Translated Content if available -->
             <div class="full-content">
                 <h4 class="section-title">Content</h4>
-                <p>{{ entry.full_content | safe }}</p>
-            </div>
-
-            <div class="summarized-content">
-                {% if entry.summarized_content %}
-                    <h4 class="section-title">Summarized Content:</h4>
-                    <p>{{ entry.summarized_content | safe }}</p>
+                {% if translation %}
+                    <p>{{ translation.full_content | safe }}</p>
                 {% else %}
-                <form action="/summarize/{{ entry.link }}" method="get">
-                    <button type="submit">Summarize this Article</button>
-                </form>
+                    <p>{{ entry.full_content | safe }}</p>
                 {% endif %}
             </div>
+
+            <!-- Display Translated Summary if available -->
+            <div class="summarized-content">
+                {% if translation %}
+                    {% if translation.summarized_content %}
+                        <h4 class="section-title">Summary</h4>
+                        <p>{{ translation.summarized_content | safe }}</p>
+                    {% else %}
+                        <!-- Show summarize button if there is no translated summary -->
+                        <form action="/summarize/{{ entry.link }}" method="get">
+                            <button type="submit">Summarize this Article</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    {% if entry.summarized_content %}
+                        <h4 class="section-title">Summary</h4>
+                        <p>{{ entry.summarized_content | safe }}</p>
+                    {% else %}
+                        <!-- Show summarize button if there is no summary or translation -->
+                        <form action="/summarize/{{ entry.link }}" method="get">
+                            <button type="submit">Summarize this Article</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
         </section>
         {% else %}
-{% endif %}
+            <p>No article found.</p>
+        {% endif %}
     </div>
 
     <!-- Theme Script -->
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
+    <script>
+        function updateFormActionAndSubmit() {
+            var select = document.querySelector('select[name="lang"]');
+            var lang = select.value;
+            var currentUrl = window.location.pathname;  // Get current URL path
+            var form = document.getElementById('languageForm');
+            form.action = currentUrl + '?lang=' + lang;  // Update form action with the selected lang
+            form.submit();  // Submit the form
+        }
+    </script>
 </body>
 </html>

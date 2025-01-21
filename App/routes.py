@@ -1,12 +1,13 @@
 # routes.py
 from flask import Flask,render_template, request, redirect, url_for, flash
-from models import RSSFeed, FeedEntry, db
+from models import RSSFeed, FeedEntry, Translation, db
 from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content, get_domain, get_favicon
 import requests
 from bs4 import BeautifulSoup
 from youtube_transcript_api import YouTubeTranscriptApi
 from summarizer import ai_summarizer
 import urllib.parse
+from translator import translate_html_components
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
@@ -203,13 +204,66 @@ def link_page(param):
             if not entry:
                 flash(f'No article found with the provided ID: {param}', 'error')
                 return redirect(url_for('index'))
+
+            # Check if lang parameter is provided
+            lang = request.args.get('lang')
+            if lang:
+                # Check if the translation already exists
+                translation = Translation.query.filter_by(link=entry.link, language=lang).first()
+                
+                if not translation:
+                    # If translation doesn't exist, translate and save it
+                    translated_title, translated_content, translated_summary = translate_html_components(
+                        title=entry.title, content=entry.full_content, summary=entry.summarized_content, target_language=lang
+                    )
+
+                    # Save the translation in the database
+                    translation = Translation(
+                        link=entry.link,
+                        language=lang,
+                        title=translated_title,
+                        full_content=translated_content,
+                        summarized_content=translated_summary
+                    )
+                    db.session.add(translation)
+                    db.session.commit()
+
+                # Pass the translated content to the template
+                return render_template('link_page.html', feed=feed, entry=entry, translation=translation)
+
+            # If no lang parameter, show the original content
             return render_template('link_page.html', feed=feed, entry=entry)
 
         else:
             # Handle URL link case (if the param is not an ID)
             feed_entry = FeedEntry.query.filter_by(link=param).first()  # Fetch feed entry by URL (link)
             if feed_entry:
-                # If feed entry is found, pass related feed and entry to template
+                # If feed entry is found, check for language translation
+                lang = request.args.get('lang')
+                if lang:
+                    # Check if the translation already exists
+                    translation = Translation.query.filter_by(link=feed_entry.link, language=lang).first()
+                    
+                    if not translation:
+                        # Translate and store the new translation
+                        translated_title, translated_content, translated_summary = translate_html_components(
+                            title=feed_entry.title, content=feed_entry.full_content, summary=feed_entry.summarized_content, target_language=lang
+                        )
+
+                        translation = Translation(
+                            link=feed_entry.link,
+                            language=lang,
+                            title=translated_title,
+                            full_content=translated_content,
+                            summarized_content=translated_summary
+                        )
+                        db.session.add(translation)
+                        db.session.commit()
+
+                    # Return the translated content
+                    return render_template('link_page.html', feed=feed_entry.feed, entry=feed_entry, translation=translation)
+
+                # If no lang parameter, show the original content
                 return render_template('link_page.html', feed=feed_entry.feed, entry=feed_entry)
 
             # If no feed entry is found by URL, try fetching the associated RSS feed and its entries
@@ -224,4 +278,3 @@ def link_page(param):
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
         return redirect(url_for('index'))
-
