@@ -179,7 +179,7 @@
         <button id="increase-width-btn">Increase Width</button>
     </div> -->
     <div id="sort-by">
-        <form action="{{ url_for('index')}}">
+        <form action="{{ url_for('main.index')}}">
             <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
             <button type="submit" name="sort_by" value="link">Sort by Link</button>
             <button type="submit" name="sort_by" value="title">Sort by Title</button>
@@ -197,7 +197,7 @@
             <li style="background-color: var(--primary);" class="list-group-item">
                 <!-- Other content omitted for brevity -->
                 <h3><a style="color: black; text-decoration:wavy;" href="/link/{{ entry.link }}">{{ entry.title }}</a></h3>
-                <p style="font-style: italic;color: black;">{{ entry.date }}</p>
+                <p style="font-style: italic;color: black;">{{ entry.date | format_datetime }}</p>
                 <p style="color: black;">By {{ entry.author }}</p>
                 <p style="color: black;"><a style="color: black;" href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
                 <p style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p>

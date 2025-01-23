@@ -8,12 +8,13 @@ import re
 from summarizer import ai_summarizer
 import wikipedia
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timezone
 from dateutil import parser
 from urllib.parse import urljoin, urlparse
 import markdown2
 from custom_scraper import fetch_content
 from googletrans import Translator, LANGUAGES
+from flask import current_app as app
 
 def is_valid_rss(url):
     try:
@@ -32,8 +33,7 @@ def get_feed_contents(url):
             content = print_elements_from_url(entry.link)
             new_entry = FeedEntry(
                 title = entry.title,
-                date = format_datetime(entry.published) if hasattr(entry, 'published') else None,
-                author = entry.author if hasattr(entry, 'author') else 'None',
+                date=parse_datetime(entry.published) if hasattr(entry, 'published') else datetime.now(timezone.utc),                author = entry.author if hasattr(entry, 'author') else 'None',
                 raw_description=entry.description,
                 full_content=content,
                 img=entry.enclosures[0].href if hasattr(entry, 'enclosures') and entry.enclosures else '',
@@ -124,9 +124,9 @@ def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
             query = query.order_by(FeedEntry.similarity_score.desc())
     else:  # Default to sorting by date
         if sort_order == 'asc':
-            query = query.order_by(func.datetime(FeedEntry.date).asc())  
+            query = query.order_by(FeedEntry.date.asc())  # Direct column access
         else:
-            query = query.order_by(func.datetime(FeedEntry.date).desc()) 
+            query = query.order_by(FeedEntry.date.desc())
 
 
     # Apply pagination
@@ -254,14 +254,28 @@ def get_domain(url):
         return match.group(1)
     else:
         return None
-    
-def format_datetime(dateTimeString):
+
+def parse_datetime(dateTimeString):
+    """Convert string to timezone-aware datetime object"""
     try:
-        date = parser.parse(dateTimeString)
-        formatted_date = date.strftime("%A, %B %d, %Y %I:%M %p")
-        return formatted_date
-    except ValueError:
-        return "Invalid datetime format"
+        return parser.parse(dateTimeString).astimezone(timezone.utc)
+    except (ValueError, TypeError):
+        return datetime.now(timezone.utc)  # Fallback to current UTC time
+
+@app.template_filter('format_datetime')
+def format_datetime_filter(dt_or_str):
+    """Jinja filter to display original feed datetime without timezone conversion"""
+    try:
+        # If already a datetime object (from database), format directly
+        if isinstance(dt_or_str, datetime):
+            return dt_or_str.strftime("%B %d, %Y %I:%M %p")
+        
+        # If string input (raw feed data), parse but keep original time
+        dt = parser.parse(dt_or_str, ignoretz=True)
+        return dt.strftime("%B %d, %Y %I:%M %p")
+        
+    except (ValueError, TypeError, AttributeError):
+        return "Date unavailable"
     
 def print_elements_from_url(url):
     content = fetch_content(url)

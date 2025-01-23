@@ -1,6 +1,7 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+from sqlalchemy import DateTime 
 
 db = SQLAlchemy()
 
@@ -17,7 +18,7 @@ class RSSFeed(db.Model):
 class FeedEntry(db.Model):
     # Article Details
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String, nullable=False, default=datetime.now(timezone.utc))
+    date = db.Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))    
     title = db.Column(db.String(200), nullable=False)
     author = db.Column(db.String(100))
     raw_description = db.Column(db.Text)
