@@ -109,7 +109,7 @@ def summarize_single_article(link):
         flash(f'Error: {str(e)}', 'error')
     
     # Redirect back to the original article page
-    return redirect(url_for('link_page', param=link))
+    return redirect(url_for('main.link_page', param=link))
 
 # Toggle Buttons
 @main.route('/toggle_unread/<int:id>', methods=['POST'])
