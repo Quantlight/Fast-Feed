@@ -16,3 +16,4 @@ googletrans==4.0.0-rc1
 httpx==0.13.3
 legacy-cgi
 scikit-learn
+waitress
