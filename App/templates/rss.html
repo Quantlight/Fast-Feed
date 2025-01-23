@@ -64,7 +64,7 @@
         </div>
     </div>  
 <div class="container">
-    <h1>Information Made Simpler<div class="animated-border"></div></h1>
+    <h1 style="padding-top: 5vh;">Information Made Simpler<div class="animated-border"></div></h1>
     <div id="back-to-top-div"> <button id="back-to-top" title="Back to Top">&#8593;</button></div>
 
     <div id="popup" class="popup">
@@ -82,6 +82,7 @@
             </form>
         </div>
     </div>
+
     <!-- <div id="content-type">
         <label for="toggleMode">Default Display Mode:</label>
         <select id="toggleMode">
@@ -102,6 +103,14 @@
             {% endif %}
         {% endwith %}
     </div>
+    {% for article in articles if not article.is_starred %}
+    <div class="article">
+    <h4>{{ article.title }}</h4>
+        <div class="similarity">
+            Relevance: {{ "%.1f"|format(article.similarity_score * 100) }}%
+        </div>
+    </div>
+    {% endfor %}
     <!-- <button id="scrollUp">Scroll Up</button>
     <button id="scrollDown">Scroll Down</button> -->
     <!-- Section to list subscribed websites -->
@@ -174,6 +183,7 @@
             <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
             <button type="submit" name="sort_by" value="link">Sort by Link</button>
             <button type="submit" name="sort_by" value="title">Sort by Title</button>
+            <button type="submit" name="sort_by" value="simi">Sort by Similarity</button>
             <select name="sort_order">
                 <option value="asc" {% if request.args.get('sort_order', 'desc') == 'asc' %} selected {% endif %}>Ascending</option>
                 <option value="desc" {% if request.args.get('sort_order', 'desc') == 'desc' %} selected {% endif %}>Descending</option>
@@ -190,6 +200,7 @@
                 <p style="font-style: italic;color: black;">{{ entry.date }}</p>
                 <p style="color: black;">By {{ entry.author }}</p>
                 <p style="color: black;"><a style="color: black;" href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
+                <p style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p>
                 <!-- <p>Feed ID: {{ entry.feed_id }}</p> -->
                 <!-- <p>Account ID: {{ entry.account_id }}</p> -->
                 <div class="btn-group" role="group">

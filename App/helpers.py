@@ -117,6 +117,11 @@ def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
             query = query.order_by(FeedEntry.title.asc())
         else:
             query = query.order_by(FeedEntry.title.desc())
+    elif sort_by == 'simi':
+        if sort_order == 'asc':
+            query = query.order_by(FeedEntry.similarity_score.asc())
+        else:
+            query = query.order_by(FeedEntry.similarity_score.desc())
     else:  # Default to sorting by date
         if sort_order == 'asc':
             query = query.order_by(func.datetime(FeedEntry.date).asc())  
@@ -170,7 +175,7 @@ def remove_citations(text):
 def extract_text_from_wikipedia(wiki_link):
     try:
         r = requests.get(wiki_link)
-        soup = BeautifulSoup(r.text,'html.parser').select('body')[0]
+        soup = BeautifulSoup(r.text,'lxml').select('body')[0]
         paragraphs = []
         
         for tag in soup.find_all():

@@ -35,7 +35,7 @@ class FeedEntry(db.Model):
     is_starred = db.Column(db.Boolean, default=False)
     is_read_later = db.Column(db.Boolean, default=False)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
-
+    similarity_score = db.Column(db.Float, default=0.0)  # Stores similarity score for the user
     def __repr__(self):
         return f'<FeedEntry {self.title}>'
 

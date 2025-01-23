@@ -1,5 +1,5 @@
 # routes.py
-from flask import Flask,render_template, request, redirect, url_for, flash
+from flask import Flask,render_template, request, redirect, url_for, flash, session
 from models import RSSFeed, FeedEntry, Translation, db
 from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content, get_domain, get_favicon
 import requests
@@ -8,6 +8,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 from summarizer import ai_summarizer
 import urllib.parse
 from translator import translate_html_components
+from similarity import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
@@ -122,10 +123,18 @@ def toggle_unread(id):
 
 @app.route('/toggle_starred/<int:id>', methods=['POST'])
 def toggle_starred(id):
+    user_id = session.get('user_id')
     entry = FeedEntry.query.get_or_404(id)
-    entry.is_starred = not entry.is_starred  # Toggle the state
+    
+    # Toggle state
+    entry.is_starred = not entry.is_starred
     db.session.commit()
-    flash('Article starred!' if entry.is_starred else 'Article unstarred!', 'success')
+    
+    # Force full refresh to handle array conversions
+    refresh_data(user_id)
+    calculate_scores(user_id)
+    
+    flash(f'Article {"starred" if entry.is_starred else "unstarred"}!', 'success')
     return redirect(url_for('index'))
 
 @app.route('/toggle_read_later/<int:id>', methods=['POST'])
