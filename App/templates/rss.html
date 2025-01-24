@@ -26,10 +26,6 @@
 <body>
     <nav class="navbar">
         <div class="container-fluid">
-            <!-- Removed Sidebar-->
-            <!-- <button id="sidebarToggle" id="sidebar-toggler">
-                &#9776; 
-            </button>  -->
             <a class="navbar-brand" href="#">FAST FEED</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
@@ -141,38 +137,7 @@
     <div class="scroll-container" id="container">
         <!-- Content will be dynamically loaded here -->
     </div>
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <div class="sidebar-header">
-            <h3>Subscribed Websites</h3>
-            <button id="sidebarClose" class="btn btn-danger">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="subscribed-websites">
-            <!-- Section to list subscribed websites -->
-            <ul class="feed-list">
-                {% for feed in feeds %}
-                <li class="feed-item">
-                    <div class="feed-content">
-                        {% if feed.icon %}
-                        <img class="feed-icon" src="{{ feed.icon }}" alt="Website Icon">
-                        {% else %}
-                        <p class="feed-icon-placeholder">Icon</p>
-                        {% endif %}
-                        <div class="feed-info">
-                            <h4>{{ feed.website_name }}</h4>
-                            <a href="{{feed.url}}">Link</a>
-                        </div>
-                    </div>
-                    <div class="feed-actions">
-                        <a href="/delete/{{ feed.id }}" class="btn btn-danger btn-sm">Delete</a>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>            
-        </div>
-    </div>
+
 
     <!-- <div id="width-controls">
         <button id="decrease-width-btn">Decrease Width</button>
@@ -248,7 +213,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='rss.js') }}"></script>
     <script src="{{ url_for('static', filename='theme.js') }}"></script>
-    <script src="{{ url_for('static', filename='sidebar.js') }}"></script>
     <script src="{{ url_for('static', filename='copy.js') }}"></script>
     <script src="{{ url_for('static', filename='scrolltotop.js') }}"></script>
     <script src="{{ url_for('static', filename='buttons.js') }}"></script>
