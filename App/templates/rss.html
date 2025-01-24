@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='linear-rainbow.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='test.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='scrolltotop.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='flash-messages.css') }}">
@@ -142,14 +141,15 @@
         <button id="increase-width-btn">Increase Width</button>
     </div> -->
     <div id="sort-by">
-        <form action="{{ url_for('main.index')}}">
+        <form action="{{ url_for('main.index')}}" method="POST" onsubmit="saveScrollPosition()">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <button type="submit" name="sort_by" value="datetime">Sort by Date</button>
             <button type="submit" name="sort_by" value="link">Sort by Link</button>
             <button type="submit" name="sort_by" value="title">Sort by Title</button>
             <button type="submit" name="sort_by" value="simi">Sort by Similarity</button>
             <select name="sort_order">
-                <option value="asc" {% if request.args.get('sort_order', 'desc') == 'asc' %} selected {% endif %}>Ascending</option>
-                <option value="desc" {% if request.args.get('sort_order', 'desc') == 'desc' %} selected {% endif %}>Descending</option>
+                <option value="asc" {% if session.get('sort_order', 'desc') == 'asc' %}selected{% endif %}>Ascending</option>
+                <option value="desc" {% if session.get('sort_order', 'desc') == 'desc' %}selected{% endif %}>Descending</option>
             </select>
         </form>
     </div>
@@ -213,6 +213,7 @@
     <script src="{{ url_for('static', filename='copy.js') }}"></script>
     <script src="{{ url_for('static', filename='scrolltotop.js') }}"></script>
     <script src="{{ url_for('static', filename='buttons.js') }}"></script>
-    
+    <script src="{{ url_for('static', filename='scrollposition.js') }}"></script>
+
 </body>
 </html>

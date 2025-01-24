@@ -6,8 +6,10 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
     app.config['SECRET_KEY'] = 'your_secret_key_here'
-    csrf = CSRFProtect(app)  # Correct initialization
-    
+    # app.config['WTF_CSRF_SECRET_KEY'] = 'different-secure-key-here'  # Optional but recommended
+    # app.config['WTF_CSRF_ENABLED'] = False
+
+    csrf = CSRFProtect(app)    
     # Initialize extensions
     db.init_app(app)
     

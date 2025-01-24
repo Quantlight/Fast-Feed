@@ -14,12 +14,19 @@ from app import create_app
 
 main = Blueprint('main', __name__)
 
-@main.route('/')
+@main.route('/', methods=['GET', 'POST'])
 def index():
-    sort_by = request.args.get('sort_by', default='datetime')  # Default sort by datetime
-    sort_order = request.args.get('sort_order', default='desc')  # Default to descending order
+    if request.method == 'POST':
+        # Save sorting preferences to session
+        session['sort_by'] = request.form.get('sort_by', 'datetime')
+        session['sort_order'] = request.form.get('sort_order', 'desc')
+        return redirect(url_for('main.index'))
+    
+    # Retrieve preferences from session or use defaults
+    sort_by = session.get('sort_by', 'datetime')
+    sort_order = session.get('sort_order', 'desc')
+    
     feeds, sorted_entries = sort_articles_by(sort_by, sort_order)
-
     return render_template('rss.html', feeds=feeds, sorted_entries=sorted_entries)
 
 
