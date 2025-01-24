@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 button,
                 'fas fa-envelope-open-text', // Icon for unread
                 'far fa-envelope', // Icon for read
-                'Unread', // Text for unread
-                'Read' // Text for read
+                '', // Text for unread
+                '' // Text for read
             );
         });
     });
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 button,
                 'fas fa-star',
                 'far fa-star',
-                'Starred',
-                'Star'
+                '',
+                ''
             ).then(data => {
                 // Update similarity score if request was successful
                 if (data.status === 'success') {
@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 button,
                 'fas fa-bookmark', // Icon for read later
                 'far fa-bookmark', // Icon for not read later
-                'Saved', // Text for read later
-                'Save' // Text for not read later
+                '', // Text for read later
+                '' // Text for not read later
             );
         });
     });
