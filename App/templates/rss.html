@@ -21,24 +21,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='flash-messages.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
 
-
 </head>
 <body>
     <nav class="navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">FAST FEED</a>
-            <ul class="navbar-nav" id="navbarNav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/youtube">Youtube</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/wikipedia">Wikipedia</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="add_articles">Add Feed</a>
-                </li>
-            </ul>
-        </div>
+        <a class="navbar-brand" href="#">FAST FEED</a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/youtube">Youtube</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/wikipedia">Wikipedia</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="add_articles">Add Feed</a>
+            </li>
+        </ul>
     </nav>
 
     <div class="buttons-container">
@@ -172,30 +169,30 @@
                 <div class="btn-group" role="group">
                     <button class="btn btn-secondary toggle-unread" data-entry-id="{{ entry.id }}">
                         {% if entry.is_unread %}
-                            <i class="fas fa-envelope-open-text"></i> Unread
+                            <i class="fas fa-envelope-open-text"></i>
                         {% else %}
-                            <i class="far fa-envelope"></i> Read
+                            <i class="far fa-envelope"></i>
                         {% endif %}
                     </button>
                     
                     <button class="btn btn-secondary toggle-starred" data-entry-id="{{ entry.id }}">
                         {% if entry.is_starred %}
-                            <i class="fas fa-star"></i> Starred
+                            <i class="fas fa-star"></i>
                         {% else %}
-                            <i class="far fa-star"></i> Star
+                            <i class="far fa-star"></i>
                         {% endif %}
                     </button>
                     
                     <button class="btn btn-secondary toggle-read-later" data-entry-id="{{ entry.id }}">
                         {% if entry.is_read_later %}
-                            <i class="fas fa-bookmark"></i> Saved
+                            <i class="fas fa-bookmark"></i>
                         {% else %}
-                            <i class="far fa-bookmark"></i> Save
+                            <i class="far fa-bookmark"></i>
                         {% endif %}
                     </button>
                     
                     <button class="btn btn-primary copy-btn">
-                        <i class="fas fa-copy"></i> Copy
+                        <i class="fas fa-copy"></i>
                     </button>
                 </div>
             </li>
@@ -216,6 +213,6 @@
     <script src="{{ url_for('static', filename='copy.js') }}"></script>
     <script src="{{ url_for('static', filename='scrolltotop.js') }}"></script>
     <script src="{{ url_for('static', filename='buttons.js') }}"></script>
-
+    
 </body>
 </html>
