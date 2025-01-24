@@ -66,6 +66,7 @@
             <p>Add a RSS link here</p>
             <form action="/add" method="post" >
                 <div class="input-group-popup">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <input type="text" name="title" class="form-popup" placeholder="Enter Title Here" >
                     <input type="text" name="url" class="form-popup" placeholder="Enter RSS Feed URL" required>
                     <div class="input-group-append">
