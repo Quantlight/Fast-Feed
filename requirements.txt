@@ -17,3 +17,4 @@ httpx==0.13.3
 legacy-cgi
 scikit-learn
 waitress
+Flask-WTF
