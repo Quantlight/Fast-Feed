@@ -10,11 +10,10 @@
     transition: background-color 0.3s ease; /* Smooth transition for background color change */
     border-bottom: 2px solid black; /* 2px solid black bottom border */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
-    border-radius: 0; /* Optional: Remove border radius */
-    display: flex; /* Display navbar items horizontally */
-    justify-content: space-between; /* Align items with space between them */
-    align-items: center; /* Center items vertically */
-    padding: 10px 20px; /* Adjust padding for the navbar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
 }
 
 .navbar-brand {
@@ -29,18 +28,13 @@
     transition: color 1s ease;
 }
 
-.navbar-toggler {
-    color: var(--text); /* Hamburger icon color */
-    border: none; /* Remove default button border */
-    background: none; /* Remove default button background */
-    display: none; /* Hide by default */
-}
-
 .navbar-nav {
     flex-direction: row;
-    display: flex; /* Display nav items horizontally */
-    align-items: center; /* Center items vertically */
-    list-style: none; /* Remove default list style */
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-item {
@@ -52,6 +46,7 @@
     color: var(--text); /* Nav link text color */
     text-decoration: none; /* Remove underline from links */
     padding: 10px; /* Add padding to links */
+    transition: all 0.3s ease;
 }
 
 /* Hover effect for nav links */
@@ -60,24 +55,46 @@
     transition: all 0.5s ease-in-out;
 }
 
-/* Media query for mobile devices */
+/* Mobile Adaptations */
 @media (max-width: 768px) {
-    .navbar-nav {
-        display: none; /* Hide nav links */
+    .navbar {
+        padding: 10px 15px; /* Reduce padding for mobile */
     }
 
-    .navbar-toggler {
-        display: block; /* Show the toggler button */
+    .navbar-nav {
+        flex-wrap: wrap; /* Allow nav items to wrap */
+        justify-content: flex-end; /* Align items to the right */
+    }
+
+    .nav-item {
+        margin-left: 10px; /* Reduce spacing between items */
+    }
+
+    .nav-link {
+        padding: 8px; /* Reduce padding for mobile */
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem; /* Slightly smaller brand text */
     }
 }
 
-/* Media query for larger devices */
-@media (min-width: 769px) {
-    .navbar-nav {
-        display: flex; /* Show nav links */
+@media (max-width: 480px) {
+    .navbar {
+        height: 60px; /* Slightly reduce navbar height */
     }
 
-    .navbar-toggler {
-        display: none; /* Hide the toggler button */
+    .nav-item {
+        margin-left: 8px; /* Further reduce spacing */
+    }
+
+    .nav-link {
+        padding: 6px; /* Further reduce padding */
+        font-size: 0.85rem; /* Smaller font size for very small screens */
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem; /* Smaller brand text for very small screens */
     }
 }
