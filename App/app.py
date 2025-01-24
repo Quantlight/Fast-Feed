@@ -1,6 +1,13 @@
 from flask import Flask
 from models import db
 from flask_wtf.csrf import CSRFProtect
+from waitress import serve
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DEV = os.getenv("DEV")
 
 def create_app():
     app = Flask(__name__)
@@ -24,4 +31,7 @@ if __name__ == '__main__':
     app = create_app()
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    if DEV == "True":
+        app.run(debug=True)
+    else:
+        serve(app, host="0.0.0.0", port=8080)
