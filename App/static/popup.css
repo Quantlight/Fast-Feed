@@ -10,6 +10,7 @@
   }
   
 .popup-content {
+    border: 1px solid black;
     background-color: var(--bg);
     width: 400px;
     padding: 20px;
@@ -35,6 +36,8 @@
 
 .input-group-popup input {
   color: var(--text);
+  border: 1px solid black;
+
 }
 
 .form-popup {
