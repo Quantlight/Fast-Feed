@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">RSS Feed Manager</a>
+            <a class="navbar-brand" href="/">FAST FEED</a>
             <ul class="navbar-nav" id="navbarNav">
                 <li class="nav-item">
                     <a class="nav-link" href="/youtube">Youtube</a>
@@ -35,7 +35,7 @@
         </div>
     </nav>
     <h1>Wikipedia Content Summarizer </h1>
-    <form action="{{ url_for('wikipedia_content') }}" method="post">
+    <form action="{{ url_for('main.wikipedia_content') }}" method="post">
         <input type="text" name="wiki_link" placeholder="Wikipedia Link" required>
         <button type="submit">Summarize Content</button>
     </form>
