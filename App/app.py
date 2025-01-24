@@ -1,10 +1,12 @@
 from flask import Flask
 from models import db
+from flask_wtf.csrf import CSRFProtect
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
     app.config['SECRET_KEY'] = 'your_secret_key_here'
+    csrf = CSRFProtect(app)  # Correct initialization
     
     # Initialize extensions
     db.init_app(app)
@@ -20,5 +22,4 @@ if __name__ == '__main__':
     app = create_app()
     with app.app_context():
         db.create_all()
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
+    app.run(debug=True)

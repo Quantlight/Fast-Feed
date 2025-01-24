@@ -1,5 +1,6 @@
 # routes.py
-from flask import Blueprint,render_template, request, redirect, url_for, flash, session
+import os
+from flask import Blueprint,render_template, request, redirect, url_for, flash, session, jsonify
 from models import RSSFeed, FeedEntry, Translation, db
 from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content, get_domain, get_favicon
 import requests
@@ -9,7 +10,7 @@ from summarizer import ai_summarizer
 import urllib.parse
 from translator import translate_html_components
 from similarity import *
-from app import create_app
+from app import create_app 
 
 main = Blueprint('main', __name__)
 
@@ -115,34 +116,38 @@ def summarize_single_article(link):
 @main.route('/toggle_unread/<int:id>', methods=['POST'])
 def toggle_unread(id):
     entry = FeedEntry.query.get_or_404(id)
-    entry.is_unread = not entry.is_unread  # Toggle the state
+    entry.is_unread = not entry.is_unread
     db.session.commit()
-    flash('Article marked as unread!' if entry.is_unread else 'Article marked as read!', 'success')
-    return redirect(url_for('main.index'))
+    return jsonify({
+        'status': 'success',
+        'is_unread': entry.is_unread,
+        'message': 'Article marked as unread!' if entry.is_unread else 'Article marked as read!'
+    })
 
 @main.route('/toggle_starred/<int:id>', methods=['POST'])
 def toggle_starred(id):
     user_id = session.get('user_id')
     entry = FeedEntry.query.get_or_404(id)
-    
-    # Toggle state
     entry.is_starred = not entry.is_starred
     db.session.commit()
-    
-    # Force full refresh to handle array conversions
     refresh_data(user_id)
     calculate_scores(user_id)
-    
-    flash(f'Article {"starred" if entry.is_starred else "unstarred"}!', 'success')
-    return redirect(url_for('main.index'))
+    return jsonify({
+        'status': 'success',
+        'is_starred': entry.is_starred,
+        'message': f'Article {"starred" if entry.is_starred else "unstarred"}!'
+    })
 
 @main.route('/toggle_read_later/<int:id>', methods=['POST'])
 def toggle_read_later(id):
     entry = FeedEntry.query.get_or_404(id)
-    entry.is_read_later = not entry.is_read_later  # Toggle the state
+    entry.is_read_later = not entry.is_read_later
     db.session.commit()
-    flash('Article marked to read later!' if entry.is_read_later else 'Article removed from read later!', 'success')
-    return redirect(url_for('main.index'))
+    return jsonify({
+        'status': 'success',
+        'is_read_later': entry.is_read_later,
+        'message': 'Article marked to read later!' if entry.is_read_later else 'Article removed from read later!'
+    })
 
 # Youtube summarize
 @main.route('/youtube', methods=['GET', 'POST'])

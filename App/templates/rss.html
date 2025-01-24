@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Multi Content Summarization to Regional Languages with Recommendation System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Bootstrap CSS -->
@@ -200,49 +201,37 @@
                 <p style="font-style: italic;color: black;">{{ entry.date | format_datetime }}</p>
                 <p style="color: black;">By {{ entry.author }}</p>
                 <p style="color: black;"><a style="color: black;" href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
-                <p style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p>
+                <p id="similarity-{{ entry.id }}" style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p>
                 <!-- <p>Feed ID: {{ entry.feed_id }}</p> -->
                 <!-- <p>Account ID: {{ entry.account_id }}</p> -->
                 <div class="btn-group" role="group">
-                    <form action="/toggle_unread/{{ entry.id }}" method="post">
-                        <button type="submit" class="btn btn-secondary{% if entry.is_unread %} btn-success{% endif %}">
-                            {% if entry.is_unread %}
-                                <i class="fas fa-envelope-open-text"></i> <!-- Icon for unread state -->
-                                Unread
-                            {% else %}
-                                <i class="far fa-envelope"></i> <!-- Icon for read state -->
-                                Read
-                            {% endif %}
-                        </button>
-                    </form>
-                    <form action="/toggle_starred/{{ entry.id }}" method="post">
-                        <button type="submit" class="btn btn-secondary{% if entry.is_starred %} btn-success{% endif %}">
-                            {% if entry.is_starred %}
-                                <i class="fas fa-star"></i> <!-- Icon for starred state -->
-                                Starred
-                            {% else %}
-                                <i class="far fa-star"></i> <!-- Icon for not starred state -->
-                                Star
-                            {% endif %}
-                        </button>
-                    </form>
-                    <form action="/toggle_read_later/{{ entry.id }}" method="post">
-                        <button type="submit" class="btn btn-secondary{% if entry.is_read_later %} btn-success{% endif %}">
-                            {% if entry.is_read_later %}
-                                <i class="fas fa-bookmark"></i> <!-- Icon for read later state -->
-                                Saved
-                            {% else %}
-                                <i class="far fa-bookmark"></i> <!-- Icon for not read later state -->
-                                Save
-                            {% endif %}
-                        </button>
-                    </form>
-                    <form action="javascript:void(0);">
-                        <button class="btn btn-primary copy-btn">
-                            <i class="fas fa-copy"></i> 
-                            Copy   
-                        </button>
-                    </form>
+                    <button class="btn btn-secondary toggle-unread" data-entry-id="{{ entry.id }}">
+                        {% if entry.is_unread %}
+                            <i class="fas fa-envelope-open-text"></i> Unread
+                        {% else %}
+                            <i class="far fa-envelope"></i> Read
+                        {% endif %}
+                    </button>
+                    
+                    <button class="btn btn-secondary toggle-starred" data-entry-id="{{ entry.id }}">
+                        {% if entry.is_starred %}
+                            <i class="fas fa-star"></i> Starred
+                        {% else %}
+                            <i class="far fa-star"></i> Star
+                        {% endif %}
+                    </button>
+                    
+                    <button class="btn btn-secondary toggle-read-later" data-entry-id="{{ entry.id }}">
+                        {% if entry.is_read_later %}
+                            <i class="fas fa-bookmark"></i> Saved
+                        {% else %}
+                            <i class="far fa-bookmark"></i> Save
+                        {% endif %}
+                    </button>
+                    
+                    <button class="btn btn-primary copy-btn">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
                 </div>
             </li>
         {% endfor %}
@@ -262,6 +251,7 @@
     <script src="{{ url_for('static', filename='sidebar.js') }}"></script>
     <script src="{{ url_for('static', filename='copy.js') }}"></script>
     <script src="{{ url_for('static', filename='scrolltotop.js') }}"></script>
+    <script src="{{ url_for('static', filename='buttons.js') }}"></script>
 
 </body>
 </html>
