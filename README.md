@@ -1,2 +1,2 @@
-# RSS-Reader-Web
-Currently works is in progress check back later
+# Fast Feed
+Currently work is in progress, please check back later.
