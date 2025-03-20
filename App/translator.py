@@ -3,76 +3,84 @@ from lxml import html
 from html import unescape
 
 def translate_html_components(title=None, content=None, summary=None, target_language='en'):
-    # Initialize the Google Translate API
     translator = Translator()
 
-    # Function to translate HTML content
     def translate_html_content(html_content):
         if not html_content:
-            return html_content  # Return as is if there's no content to translate
+            return html_content
 
-        # Parse the HTML content using lxml
         tree = html.fromstring(html_content)
 
-        # Function to translate text inside tags
-        def translate_element(element):
-            # Translate the element's text if it exists and isn't empty
-            if element.text and element.text.strip():  # Avoid translating None or empty strings
-                try:
-                    translated_text = translator.translate(element.text, dest=target_language).text
-                    element.text = translated_text  # Replace the text with the translated text
-                except Exception as e:
-                    # Log the error, but do not interrupt the process
-                    print(f"Error translating text: {e}")
+        # Collect all texts (node.text and tail) and their node references.
+        texts_to_translate = []
+        nodes = []  # Each entry is a tuple (node, attribute) where attribute is 'text' or 'tail'
 
-            # Handle children (for nested tags like <strong>)
-            for child in element:
-                if child.text and child.text.strip():  # Check if child element has text
-                    translate_element(child)  # Recursively translate text inside child elements
+        def traverse(node):
+            if node.text and node.text.strip():
+                texts_to_translate.append(node.text)
+                nodes.append((node, 'text'))
+            for child in node:
+                traverse(child)
+                if child.tail and child.tail.strip():
+                    texts_to_translate.append(child.tail)
+                    nodes.append((child, 'tail'))
 
-                # Check for tail text (text after the element's children)
-                if child.tail and child.tail.strip():  # Check if there's tail text and it's not None or empty
+        traverse(tree)
+
+        translations = []
+        if texts_to_translate:
+            try:
+                # Attempt batch translation.
+                batch_result = translator.translate(texts_to_translate, dest=target_language)
+                # Ensure we have a list.
+                if not isinstance(batch_result, list):
+                    batch_result = [batch_result]
+                translations = batch_result
+            except Exception as e:
+                print(f"Batch translation failed: {e}")
+                # Fallback: translate texts one by one.
+                for text in texts_to_translate:
                     try:
-                        translated_tail = translator.translate(child.tail, dest=target_language).text
-                        child.tail = translated_tail  # Replace the tail text with the translated text
-                    except Exception as e:
-                        # Log the error, but do not interrupt the process
-                        print(f"Error translating tail text: {e}")
+                        trans = translator.translate(text, dest=target_language)
+                        translations.append(trans)
+                    except Exception as ex:
+                        print(f"Error translating '{text}': {ex}")
+                        translations.append(type('Dummy', (), {'text': text})())  # Fallback to original text
 
-        # Traverse all elements and translate text nodes
-        for element in tree.iter():
-            if element.text:
-                translate_element(element)
+        # Verify that translations and nodes match.
+        if len(translations) != len(nodes):
+            print("Warning: number of translations does not match the number of text nodes.")
+        else:
+            for (node, attr), trans in zip(nodes, translations):
+                try:
+                    if attr == 'text':
+                        node.text = trans.text
+                    else:  # 'tail'
+                        node.tail = trans.text
+                except Exception as e:
+                    print(f"Error assigning translated text: {e}")
 
-        # Convert the tree back to an HTML string (ensure proper encoding without entities)
         translated_html = html.tostring(tree, pretty_print=True, method="html").decode('utf-8')
+        return unescape(translated_html)
 
-        # Correct any unescaped HTML entities in the translated HTML
-        translated_html = unescape(translated_html)  # Call unescape properly
-
-        return translated_html
-
-    # Translate each component if provided
     translated_title = translate_html_content(title) if title else None
     translated_content = translate_html_content(content) if content else None
     translated_summary = translate_html_content(summary) if summary else None
 
     return translated_title, translated_content, translated_summary
 
-# # Example usage
-# title = "<title>Example</title>"
-# content = """
-# <html>
-#     <body>
-#         <h1>Hello, world!</h1>
-#         <p>This is an example of <strong>HTML</strong> content.</p>
-#         <a href="https://hello.com">Click here</a>
-#     </body>
-# </html>
-# """
-# summary = "<p>This is a summary of the content.</p>"
-
-# translated_title, translated_content, translated_summary = translate_html_components(title, content, summary, target_language='hi')
+# # Example usage:
+# if __name__ == "__main__":
+#     html_content = """
+#     <html>
+#       <head><title>Hola Mundo</title></head>
+#       <body>
+#         <p>Este es un párrafo de ejemplo.</p>
+#         <p>Otro párrafo con <strong>texto importante</strong> y más detalles.</p>
+#       </body>
+#     </html>
+#     """
+#     translated_title, translated_content, _ = translate_html_components(title=html_content, content=html_content, target_language='en')
 
 # print("Translated Title:", translated_title)
 # print("Translated Content:", translated_content)
