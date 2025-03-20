@@ -80,7 +80,11 @@
                 -1px -1px 0px black,   /* Shadow on the top-left */
                 1px -1px 0px black,    /* Shadow on the bottom-left */
                 -1px 1px 0px black;
-                font-size: 50px;">{{ entry.title }}</h1>
+                font-size: 50px;">{% if translation %}
+                    {{ translation.title | safe }}
+                {% else %}
+                    {{ entry.title | safe }}
+                {% endif %}
         </header>
 
         {% if entry %}
