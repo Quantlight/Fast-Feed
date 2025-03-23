@@ -1,0 +1,103 @@
+
+  .rec-horizontal-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem; /* Optional: space between cards */
+  }
+  
+  /* Desktop: Three cards per view */
+  .rec-horizontal-scroll .rec-card {
+    flex: 0 0 calc((100% - 2rem) / 3); /* Two gaps of 1rem each */
+    background-color: var(--primary);
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    transition: box-shadow 0.3s ease;
+    scroll-snap-align: start;
+    /* Remove grid properties and fixed width */
+  }
+  
+  /* Hover effect */
+  .rec-horizontal-scroll .rec-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .rec-card-title {
+    color: var(--text);
+  }
+  
+  .rec-link {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  .rec-text-muted {
+    color: black;
+  }
+  
+  .rec-no-articles {
+    color: #555;
+  }
+  
+  /* Scrollbar styling for Chrome, Safari, and Opera */
+  .rec-horizontal-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .rec-horizontal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .rec-horizontal-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 4px;
+  }
+  
+  /* Firefox scrollbar styling */
+  .rec-horizontal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+  }
+  
+  /* Recommendation status label styling */
+  .rec-status {
+    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+  
+  .rec-status-super-high {
+    background-color: #1a7f37; /* Darker green */
+    border: 1px solid black;
+    color: black;
+  }
+  .rec-status-high {
+    background-color: #28a745; /* Green */
+    border: 1px solid black;
+    color: black;
+  }
+  .rec-status-medium {
+    background-color: #17a2b8; /* Blue */
+    border: 1px solid black;
+    color: black;
+  }
+  .rec-status-low {
+    background-color: #ffc107; /* Yellow */
+    border: 1px solid black;
+    color: black;
+  }
+  .rec-status-very-low {
+    background-color: #f0ad4e; /* Orange */
+    border: 1px solid black;
+    color: black;
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .rec-horizontal-scroll .rec-card {
+      flex: 0 0 80%; /* Show a larger card on mobile */
+    }
+  }
+  

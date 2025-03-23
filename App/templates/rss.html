@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='scrolltotop.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='flash-messages.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='recommendation.css') }}">
 
 </head>
 <body>
@@ -134,7 +135,52 @@
     <div class="scroll-container" id="container">
         <!-- Content will be dynamically loaded here -->
     </div>
-
+    
+    {% set nonzero_count = recommendation | selectattr("similarity_score", "ne", 0) | list | length %}
+    {% if nonzero_count > 0 %}
+      <div class="rec-container my-4">
+          <!-- Recommendations Section -->
+          <h2 class="rec-header">Recommended Articles</h2>
+          <div class="rec-horizontal-scroll mb-5">
+            {% for article in recommendation %}
+              <div class="rec-card" style="min-width: 18rem;">
+                <div class="rec-card-body">
+                        {% if article.similarity_score * 100 > 50 %}
+                          <div class="rec-status rec-status-super-high">Must Read</div>
+                        {% elif article.similarity_score * 100 > 40 %}
+                          <div class="rec-status rec-status-high">Highly Recommended</div>
+                        {% elif article.similarity_score * 100 > 30 %}
+                          <div class="rec-status rec-status-medium">Recommended</div>
+                        {% elif article.similarity_score * 100 > 20 %}
+                          <div class="rec-status rec-status-low">Somewhat Recommended</div>
+                        {% else %}
+                          <div class="rec-status rec-status-very-low">Barely Recommended.</div>
+                        {% endif %}
+                        <!-- Rest of your card content (title, links, etc.) goes here -->
+                      
+                  <h3>
+                    <a style="color: black; text-decoration: wavy;" href="/link/{{ article.link }}">
+                      {{ article.title }}
+                    </a>
+                  </h3>
+                  <p style="color: black;">By {{ article.author }}</p>
+                  <p style="font-style: italic;color: black;">{{ article.date | format_datetime }}</p>
+                  <!-- <p class="rec-card-text">
+                    <a class="rec-link" href="{{ article.link }}" target="_blank">{{ article.link }}</a>
+                  </p>
+                  <p class="rec-card-text">
+                    <small class="rec-text-muted">
+                      Score: {{ "%.1f"|format(article.similarity_score * 100) }}%
+                    </small>
+                  </p> -->
+                </div>
+              </div>
+            {% else %}
+              <p class="rec-no-articles">No recommended articles available.</p>
+            {% endfor %}
+          </div>
+      </div>
+    {% endif %}
 
     <!-- <div id="width-controls">
         <button id="decrease-width-btn">Decrease Width</button>
@@ -154,6 +200,7 @@
             </select>
         </form>
     </div>
+      
     <!-- List of articles -->
 <div id="articles-list" class="resizable">
     <ul class="list-group mt-4">
@@ -164,7 +211,7 @@
                 <p style="font-style: italic;color: black;">{{ entry.date | format_datetime }}</p>
                 <p style="color: black;">By {{ entry.author }}</p>
                 <p style="color: black;"><a style="color: black;" href="{{ entry.link }}" target="_blank">{{ entry.link }}</a></p>
-                <p id="similarity-{{ entry.id }}" style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p>
+                <!-- <p id="similarity-{{ entry.id }}" style="color: black;">{{ "%.1f"|format(entry.similarity_score * 100) }}</p> -->
                 <!-- <p>Feed ID: {{ entry.feed_id }}</p> -->
                 <!-- <p>Account ID: {{ entry.account_id }}</p> -->
                 <div class="btn-group" role="group">

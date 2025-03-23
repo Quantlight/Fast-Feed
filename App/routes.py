@@ -26,10 +26,8 @@ def index():
     sort_by = session.get('sort_by', 'datetime')
     sort_order = session.get('sort_order', 'desc')
     
-    feeds, sorted_entries = sort_articles_by(sort_by, sort_order)
-    return render_template('rss.html', feeds=feeds, sorted_entries=sorted_entries)
-
-
+    feeds, sorted_entries, recommendation = sort_articles_by(sort_by, sort_order)
+    return render_template('rss.html', feeds=feeds, sorted_entries=sorted_entries, recommendation=recommendation)
 @main.route('/<page_name>')
 def load_page(page_name):
     return render_template(page_name)

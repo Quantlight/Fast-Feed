@@ -15,6 +15,7 @@ import markdown2
 from custom_scraper import fetch_content
 from googletrans import Translator, LANGUAGES
 from flask import current_app as app
+import statistics
 
 def is_valid_rss(url):
     try:
@@ -100,6 +101,56 @@ def summarize_single_article_content(article_url):
     
     return []  # Return empty list if no article found or already summarized
 
+def recommended_articles(min_count=3, max_count=10, min_threshold=0.0):
+    """
+    Returns a dynamic list of recommended articles based on the variance
+    of similarity scores.
+    
+    Args:
+        min_count (int): The minimum number of recommendations.
+        max_count (int): The maximum number of recommendations.
+        min_threshold (float): Minimum similarity score for an article to be considered.
+    
+    Returns:
+        list: List of recommended FeedEntry objects.
+    """
+    # Retrieve all articles sorted by similarity score descending
+    query = FeedEntry.query.order_by(FeedEntry.similarity_score.desc())
+    candidate_articles = query.all()
+    
+    # Filter articles that meet the minimum similarity threshold.
+    eligible_articles = [article for article in candidate_articles 
+                         if article.similarity_score >= min_threshold]
+    
+    if not eligible_articles:
+        return []
+    
+    # Compute the standard deviation (stdev) of similarity scores.
+    scores = [article.similarity_score for article in eligible_articles]
+    stdev = statistics.stdev(scores) if len(scores) > 1 else 0
+    
+    # Define thresholds for the standard deviation.
+    # If stdev is high (>= high_std_threshold), there's a big gap among scores → choose min_count.
+    # If stdev is low (<= low_std_threshold), scores are similar → choose max_count.
+    low_std_threshold = 0.05   # adjust based on your data range
+    high_std_threshold = 0.2   # adjust based on your data range
+    
+    if stdev >= high_std_threshold:
+        dynamic_limit = min_count
+    elif stdev <= low_std_threshold:
+        dynamic_limit = max_count
+    else:
+        # Linear interpolation: as stdev decreases from high_std_threshold to low_std_threshold,
+        # the limit increases from min_count to max_count.
+        ratio = (high_std_threshold - stdev) / (high_std_threshold - low_std_threshold)
+        dynamic_limit = int(min_count + ratio * (max_count - min_count))
+    
+    # Ensure the dynamic limit stays between min_count and max_count.
+    dynamic_limit = max(min_count, min(dynamic_limit, max_count))
+    
+    recommendation = eligible_articles[:dynamic_limit]
+    print(recommendation)
+    return recommendation
 
 def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
     # Query all feed entries across all feeds
@@ -128,11 +179,11 @@ def sort_articles_by(sort_by, sort_order, limit=200, offset=0):
         else:
             query = query.order_by(FeedEntry.date.desc())
 
-
+    # Get the recommendation articles
+    recommendation = recommended_articles()
     # Apply pagination
     sorted_entries = query.limit(limit).offset(offset).all()
-
-    return feeds, sorted_entries
+    return feeds, sorted_entries, recommendation
 
 def article_content(url):
     headers = {
@@ -222,7 +273,7 @@ def get_favicon(url):
     # 2. Look for <link rel="shortcut icon"> or <link rel="icon"> in HTML
     try:
         response = requests.get(f"https://{domain}")
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(response.content, 'lxml')
 
         # 3. Look for Apple touch icons
         apple_icon = soup.find('link', rel='apple-touch-icon') or soup.find('link', rel='apple-touch-icon-precomposed')
