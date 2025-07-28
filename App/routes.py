@@ -1,18 +1,35 @@
 # routes.py
 import os
-from flask import Blueprint,render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Blueprint,render_template, request, redirect, url_for, flash, session, jsonify, current_app
 from models import RSSFeed, FeedEntry, Translation, db
 from helpers import is_valid_rss, get_feed_contents, sort_articles_by, extract_video_id, extract_text_from_wikipedia, summarize_content, get_domain, get_favicon
+from werkzeug.utils import secure_filename as werkzeug_secure_filename
+import xml.etree.ElementTree as ET  # Built-in, no need to install
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 from youtube_transcript_api import YouTubeTranscriptApi
 from summarizer import ai_summarizer
 import urllib.parse
 from translator import translate_html_components
 from similarity import *
 from app import create_app 
+import random
+import threading
+import warnings
+
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 main = Blueprint('main', __name__)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+
+def secure_filename(filename):
+    random_prefix = str(random.randint(10000, 99999))
+    name = werkzeug_secure_filename(filename)
+    return f"{random_prefix}_{name}"
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -28,14 +45,67 @@ def index():
     
     feeds, sorted_entries, recommendation = sort_articles_by(sort_by, sort_order)
     return render_template('rss.html', feeds=feeds, sorted_entries=sorted_entries, recommendation=recommendation)
+
 @main.route('/<page_name>')
 def load_page(page_name):
     return render_template(page_name)
 
-@main.route('/add', methods=['POST'])
-def add_feed():
-    url = request.form['url']
-    title = request.form['title']
+@main.route('/upload_opml_file', methods=['POST'])
+def add_opml_file():
+    """
+    Upload an OPML (or .xml/.txt) file,
+    extract all RSS URLs, fetch metadata in parallel,
+    dedupe against existing feeds, then bulk‑insert.
+    """
+    uploaded_file = request.files.get('file')
+    if not uploaded_file or uploaded_file.filename == '':
+        flash('No file selected', 'error')
+        return redirect(request.url)
+
+    if not allowed_file(uploaded_file.filename):
+        flash('Allowed file types: opml, xml, txt', 'error')
+        return redirect(request.url)
+    
+    if uploaded_file:
+        filename = secure_filename(uploaded_file.filename)
+        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        uploaded_file.save(filepath)
+        flash(f'File saved to {filepath}', 'info')
+
+    try:
+        # ─── 1. Parse OPML ─────────────────────────────────────────────────────────
+        # ✅ Correct:
+        tree = ET.parse(filepath)
+        root = tree.getroot()
+        if root.tag.lower() != 'opml':
+            flash('Not a valid OPML file', 'error')
+            return redirect(request.url)
+
+        # ─── 2. Collect feeds ──────────────────────────────────────────────────────
+        seen_urls = set()
+        for outline in root.findall('.//outline'):
+            url = outline.attrib.get('xmlUrl') or outline.attrib.get('htmlUrl')
+            if not url:
+                continue  # Skip outlines with no usable URL
+
+            if url in seen_urls:
+                flash(f"{url} already added. Skipped.", 'warning')
+                continue
+            print(url)
+            seen_urls.add(url)
+            title = outline.attrib.get('title') or outline.attrib.get('text', 'Untitled Feed')
+
+            feed_add(url, title)
+            flash(f"{title} feed added successfully.")
+            
+    except Exception as e:
+        flash(f'Error processing file: {e}', 'error')
+        print('Exception:', e)  # Now you’ll see errors in console
+        return redirect(request.url)
+        
+    return redirect(url_for('main.index'))
+
+def feed_add(url, title):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/122.0.2365.106'}
         response = requests.get(url, headers=headers)
@@ -48,12 +118,19 @@ def add_feed():
             db.session.add(new_feed)
             db.session.commit()
             refresh_feed()
+            print(f"{title} Has been added successfully")
             flash('RSS feed added successfully!', 'success')
         else:
             error_status = response.status_code
             flash(f'Failed to fetch RSS feed data! error status code {error_status}', 'error')
     except Exception as e:
         flash(f'Error: {str(e)}', 'error')
+
+@main.route('/add', methods=['POST'])
+def add_feed():
+    url = request.form['url']
+    title = request.form['title']
+    feed_add(url, title)
     return redirect(url_for('main.index'))
 
 

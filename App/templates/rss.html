@@ -73,8 +73,17 @@
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
+                                <form action="{{ url_for('main.add_opml_file') }}" method="post" enctype="multipart/form-data">
+                
+                <label for="file" style="display: block; text-align: center; margin-top: 2px;">OR</label><br>
+                <label for="file">Choose an OPML file to upload:</label><br>
+                <input type="file" id="file" name="file" accept=".opml,.xml,.txt" required><br><br>
+                <input type="submit" value="Upload">
+                </form>
                 </div>
             </form>
+
+
         </div>
     </div>
 

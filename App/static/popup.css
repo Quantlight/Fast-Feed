@@ -55,3 +55,37 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  /* Style for file input to match form-popup */
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 2px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+/* Style for Upload button to match .btn-primary */
+input[type="submit"] {
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: var(--primary);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: normal;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover effect for upload button */
+input[type="submit"]:hover {
+  background-color: var(--accent);
+}
+
+/* Optional: Match label style with others */
+label[for="file"] {
+  color: var(--text);
+}

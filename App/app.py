@@ -13,8 +13,14 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rss_feeds.db'
     app.config['SECRET_KEY'] = 'your_secret_key_here'
+    app.config['UPLOAD_FOLDER'] = 'uploads' # Define a folder to store uploaded files
+    app.config['ALLOWED_EXTENSIONS'] = {'opml', 'xml', 'txt'}
+
     # app.config['WTF_CSRF_SECRET_KEY'] = 'different-secure-key-here'  # Optional but recommended
-    # app.config['WTF_CSRF_ENABLED'] = False
+    app.config['WTF_CSRF_ENABLED'] = False
+
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
 
     csrf = CSRFProtect(app)    
     # Initialize extensions
@@ -24,7 +30,7 @@ def create_app():
     with app.app_context():
         from routes import main as main_blueprint
         app.register_blueprint(main_blueprint)
-        
+    
     return app
 
 if __name__ == '__main__':
